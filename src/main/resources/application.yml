@@ -9,5 +9,10 @@ spring:
     hibernate:
       ddl-auto: create
       show-sql: true
+  security:
+    oauth2:
+      resource-server:
+        jwt:
+          jwk-set-uri: http://127.0.0.1:9000/oauth2/jwks
 server:
   port: 9090
