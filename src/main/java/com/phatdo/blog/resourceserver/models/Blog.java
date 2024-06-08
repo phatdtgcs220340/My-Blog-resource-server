@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -29,9 +30,9 @@ public class Blog {
     @Column(columnDefinition = "TEXT")
     private String content;
 
-    private Timestamp createdDate;
+    private final Timestamp createdDate = Timestamp.from(Instant.now());
 
-    private Timestamp modifiedDate;
+    private Timestamp modifiedDate = Timestamp.from(Instant.now());
 
     @ManyToOne
     @JoinColumn(name = "user_id")

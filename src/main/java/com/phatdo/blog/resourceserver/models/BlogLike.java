@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 import java.sql.Timestamp;
+import java.time.Instant;
 
 @Data
 @Entity
@@ -19,7 +20,7 @@ public class BlogLike {
     @Column(unique = true, nullable = false, name = "like_id")
     private long id;
 
-    private Timestamp likedAt;
+    private final Timestamp likedAt = Timestamp.from(Instant.now());
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

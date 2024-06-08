@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Set;
 
 @Data
@@ -23,9 +24,9 @@ public class Reply {
     @Column(columnDefinition = "TEXT")
     private String content;
 
-    private Timestamp createdAt;
+    private final Timestamp createdAt = Timestamp.from(Instant.now());
 
-    private Timestamp updatedAt;
+    private Timestamp updatedAt = Timestamp.from(Instant.now());
 
     @ManyToOne
     @JoinColumn(nullable = false, name = "user_id")

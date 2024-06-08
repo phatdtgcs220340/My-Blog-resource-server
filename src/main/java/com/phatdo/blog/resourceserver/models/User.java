@@ -1,6 +1,6 @@
 package com.phatdo.blog.resourceserver.models;
 
-import com.phatdo.blog.resourceserver.role.UserRole;
+import com.phatdo.blog.resourceserver.classification.UserRole;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
@@ -10,7 +10,10 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /***
@@ -34,10 +37,9 @@ public class User {
     @Email
     private final String username;
 
-    @NotNull
-    private final UserRole role;
+    private final List<UserRole> roles = new ArrayList<>();
 
-    private Timestamp participatedDate;
+    private final Timestamp participatedDate = Timestamp.from(Instant.now());
 
     @OneToMany(mappedBy = "user",
             fetch = FetchType.EAGER,
