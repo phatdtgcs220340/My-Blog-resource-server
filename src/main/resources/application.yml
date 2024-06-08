@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: resource-server
+  datasource:
+    url: jdbc:postgresql://localhost:25432/resource-server-db
+    username: phatdo
+    password: bimatnha
+  jpa:
+    hibernate:
+      ddl-auto: create
+      show-sql: true
+server:
+  port: 9090
