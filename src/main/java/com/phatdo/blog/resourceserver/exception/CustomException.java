@@ -1,10 +1,11 @@
 package com.phatdo.blog.resourceserver.exception;
 
 import com.phatdo.blog.resourceserver.classification.TypeDTO;
+import com.phatdo.blog.resourceserver.dto.responses.ErrorDTO;
 import lombok.Getter;
 
 @Getter
-public class CustomException extends Exception implements TypeDTO {
+public class CustomException extends Exception {
     private final int code;
 
     public CustomException(CustomError error) {
@@ -12,8 +13,7 @@ public class CustomException extends Exception implements TypeDTO {
         this.code = error.getCode();
     }
 
-    @Override
-    public String type() {
-        return "error-dto";
+    public ErrorDTO toDTO() {
+        return new ErrorDTO(getMessage());
     }
 }
