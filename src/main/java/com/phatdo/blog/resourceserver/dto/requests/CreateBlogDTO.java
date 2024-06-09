@@ -1,4 +1,6 @@
 package com.phatdo.blog.resourceserver.dto.requests;
 
-public record CreateBlogDTO(String title, String content) {
+import com.phatdo.blog.resourceserver.classification.BlogType;
+
+public record CreateBlogDTO(String title, String content, BlogType type) {
 }

@@ -1,5 +1,6 @@
 package com.phatdo.blog.resourceserver.models;
 
+import com.phatdo.blog.resourceserver.classification.BlogType;
 import com.phatdo.blog.resourceserver.dto.responses.OneBlogDTO;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -32,6 +33,9 @@ public class Blog {
         @Column(columnDefinition = "TEXT")
         private String content;
 
+        @NotNull
+        private final BlogType blogType;
+
         private final Timestamp createdDate = Timestamp.from(Instant.now());
 
         private Timestamp modifiedDate = Timestamp.from(Instant.now());
@@ -54,6 +58,7 @@ public class Blog {
                                 title,
                                 content,
                                 modifiedDateStr,
+                                blogType.toString(),
                                 user.getId(),
                                 user.getFullName(),
                                 likes.size(),
