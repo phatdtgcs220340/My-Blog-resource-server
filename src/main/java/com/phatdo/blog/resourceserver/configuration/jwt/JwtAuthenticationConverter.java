@@ -15,10 +15,10 @@ public class JwtAuthenticationConverter
     @Override
     public CustomAuthentication convert(Jwt source) {
         String username = source.getSubject();
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+        List<GrantedAuthority> authorities;
         if (username.equals("ddtphat2004@gmail.com"))
-            authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+            authorities = List.of(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        else authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));
         return new CustomAuthentication(source, authorities);
     }
 }
