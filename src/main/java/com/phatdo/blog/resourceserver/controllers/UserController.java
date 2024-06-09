@@ -2,7 +2,6 @@ package com.phatdo.blog.resourceserver.controllers;
 
 import com.phatdo.blog.resourceserver.authentication.UserContext;
 import com.phatdo.blog.resourceserver.classification.TypeDTO;
-import com.phatdo.blog.resourceserver.dto.responses.UserDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

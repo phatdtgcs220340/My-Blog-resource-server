@@ -1,6 +1,5 @@
 package com.phatdo.blog.resourceserver.exception;
 
-import com.phatdo.blog.resourceserver.classification.TypeDTO;
 import com.phatdo.blog.resourceserver.dto.responses.ErrorDTO;
 import lombok.Getter;
 

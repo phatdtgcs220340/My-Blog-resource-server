@@ -5,5 +5,5 @@ public enum BlogType {
     BOOK,
     LIFE_STYLE,
     DAILY_BLOG,
-    SELF_TALK;
+    SELF_TALK
 }

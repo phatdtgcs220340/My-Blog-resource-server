@@ -3,7 +3,6 @@ package com.phatdo.blog.resourceserver.controllers;
 import com.phatdo.blog.resourceserver.authentication.UserContext;
 import com.phatdo.blog.resourceserver.classification.TypeDTO;
 import com.phatdo.blog.resourceserver.dto.requests.CreateBlogDTO;
-import com.phatdo.blog.resourceserver.dto.responses.OneBlogDTO;
 import com.phatdo.blog.resourceserver.exception.CustomException;
 import com.phatdo.blog.resourceserver.models.Blog;
 import com.phatdo.blog.resourceserver.models.User;
