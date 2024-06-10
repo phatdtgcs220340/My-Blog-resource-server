@@ -13,6 +13,7 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Data
@@ -63,5 +64,9 @@ public class Blog {
                                 user.getFullName(),
                                 likes.size(),
                                 replies.size());
+        }
+        @Override
+        public int hashCode() {
+                return Objects.hash(id); // Or any other unique identifier for User
         }
 }

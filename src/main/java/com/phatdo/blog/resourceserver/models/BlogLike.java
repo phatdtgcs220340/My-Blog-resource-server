@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.Objects;
 
 @Data
 @Entity
@@ -29,4 +30,9 @@ public class BlogLike {
     @ManyToOne
     @JoinColumn(name = "blog_id", nullable = false)
     private final Blog blog;
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id); // Or any other unique identifier for User
+    }
 }

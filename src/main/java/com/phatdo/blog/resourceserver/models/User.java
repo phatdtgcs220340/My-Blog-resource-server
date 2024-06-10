@@ -13,10 +13,7 @@ import lombok.RequiredArgsConstructor;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /***
  * Class represent a user model, should be used as a publisher or a comment owner
@@ -78,5 +75,10 @@ public class User {
                         .map(Enum::toString)
                         .toList(),
                 modifiedDateStr);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id); // Or any other unique identifier for User
     }
 }

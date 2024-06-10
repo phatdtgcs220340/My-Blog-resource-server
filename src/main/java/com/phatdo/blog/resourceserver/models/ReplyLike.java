@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.Objects;
 
 @Data
 @Entity
@@ -27,4 +28,9 @@ public class ReplyLike {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private final Reply reply;
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id); // Or any other unique identifier for User
+    }
 }
