@@ -10,8 +10,4 @@ public record ReplyDTO(
         String username,
         int totalLikes
 ) implements TypeDTO {
-    @Override
-    public String type() {
-        return "reply-dto";
-    }
 }

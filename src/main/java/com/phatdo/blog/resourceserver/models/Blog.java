@@ -65,6 +65,7 @@ public class Blog {
                                 likes.size(),
                                 replies.size());
         }
+
         @Override
         public int hashCode() {
                 return Objects.hash(id); // Or any other unique identifier for User

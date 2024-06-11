@@ -14,7 +14,4 @@ public record OneBlogDTO (
         int totalLike,
         int totalReply
 ) implements TypeDTO{
-    public String type() {
-        return "blog-dto";
-    }
 }

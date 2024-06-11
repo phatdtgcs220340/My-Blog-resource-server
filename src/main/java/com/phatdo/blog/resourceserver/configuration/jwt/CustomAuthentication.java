@@ -1,7 +1,5 @@
 package com.phatdo.blog.resourceserver.configuration.jwt;
 
-import lombok.Data;
-import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;

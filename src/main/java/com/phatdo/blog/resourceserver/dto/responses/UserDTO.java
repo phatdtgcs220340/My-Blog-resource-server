@@ -7,11 +7,8 @@ import java.util.List;
 public record UserDTO (
         long id,
         String fullName,
+        String username,
         List<String> role,
         String participatedDate
 ) implements TypeDTO{
-    @Override
-    public String type() {
-        return "user-dto";
-    }
 }
