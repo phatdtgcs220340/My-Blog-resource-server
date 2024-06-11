@@ -34,6 +34,7 @@ public class User {
 
     @NotNull
     @Email
+    @Column(unique = true, nullable = false)
     private final String username;
 
     private final List<UserRole> roles = new ArrayList<>();
@@ -70,6 +71,7 @@ public class User {
         return new UserDTO(
                 id,
                 fullName,
+                username,
                 roles
                         .stream()
                         .map(Enum::toString)
