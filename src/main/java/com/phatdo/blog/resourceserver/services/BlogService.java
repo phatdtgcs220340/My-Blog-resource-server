@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.Optional;
+
 @Slf4j
 @Service
 public class BlogService {
@@ -28,6 +30,7 @@ public class BlogService {
      * @param user : user whom pass by UserContext
      * @return A Blog if successfully save
      */
+    // chua handle duoc form thieu data
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public Blog saveBlog(String title, String content, BlogType type, User user) {
         Blog blog = new Blog(type, user);
@@ -38,7 +41,7 @@ public class BlogService {
     }
 
     /**
-     * A function find a post with a provided id
+     * @brief A function find a post with a provided id
      * @param id : post id
      * @return : A Blog
      * @throws CustomException which has 404 error
@@ -55,5 +58,43 @@ public class BlogService {
      */
     public Page<Blog> getAllBlogs(Pageable pageable) {
         return blogRepository.findAllByOrderByCreatedDateDesc(pageable);
+    }
+
+    /**
+     * @brief Update a blog
+     * @param id : id of a blog
+     * @param title : new title
+     * @param content : new content
+     * @return : An updated blog
+     * @throws CustomException : will be thrown if the blog isn't existed
+     */
+    // chua handle duoc thieu data
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public Blog updateBlog(Long id, String title, String content) throws CustomException {
+           return blogRepository.findById(id)
+                   .map(blog -> {
+                       if (!title.isEmpty())
+                           blog.setTitle(title);
+                       if (!content.isEmpty())
+                           blog.setContent(content);
+                       return blogRepository.save(blog);
+           })
+                   .orElseThrow(() -> new CustomException(CustomError.BLOG_NOT_FOUND));
+    }
+    /**
+     * @brief Delete a blog and remove it from user's blog list
+     * @param id : expected blog to be deleted
+     * @throws CustomException : will be throw if couldn't find blog
+     */
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public void deleteBlog(Long id) throws CustomException {
+        Optional<Blog> optBlog = blogRepository.findById(id);
+        if (optBlog.isPresent()) {
+            User user = optBlog.get().getUser();
+            user.getBlogs().remove(optBlog.get());
+            blogRepository.deleteById(id);
+        }
+        else
+            throw new CustomException(CustomError.BLOG_NOT_FOUND);
     }
 }
