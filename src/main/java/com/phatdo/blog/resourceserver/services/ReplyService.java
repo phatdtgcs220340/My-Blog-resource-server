@@ -2,15 +2,15 @@ package com.phatdo.blog.resourceserver.services;
 
 import com.phatdo.blog.resourceserver.exception.CustomError;
 import com.phatdo.blog.resourceserver.exception.CustomException;
-import com.phatdo.blog.resourceserver.models.Blog;
 import com.phatdo.blog.resourceserver.models.Reply;
 import com.phatdo.blog.resourceserver.models.User;
 import com.phatdo.blog.resourceserver.repositories.BlogRepository;
 import com.phatdo.blog.resourceserver.repositories.ReplyRepository;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ReplyService {
@@ -36,8 +36,18 @@ public class ReplyService {
 
     public List<Reply> findByBlog(long id) throws CustomException {
         return blogRepository.findById(id)
-                .map(blog -> {
-                    return replyRepository.findByBlogId(blog.getId());
-                }).orElseThrow(() -> new CustomException(CustomError.BLOG_NOT_FOUND));
+                .map(blog -> replyRepository.findByBlogId(blog.getId())).orElseThrow(() -> new CustomException(CustomError.BLOG_NOT_FOUND));
+    }
+
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') || authentication.principal.username == #user.username")
+    public void deleteReply(long id, User user) throws CustomException {
+        Optional<Reply> optReply = replyRepository.findById(id);
+        if (optReply.isPresent()) {
+            Reply reply = optReply.get();
+            reply.getBlog().getReplies().remove(reply);
+            user.getReplies().remove(reply);
+            replyRepository.delete(reply);
+        }
+        else throw new CustomException(CustomError.REPLY_NOT_FOUND);
     }
 }
