@@ -4,17 +4,17 @@ import com.phatdo.blog.resourceserver.authentication.UserContext;
 import com.phatdo.blog.resourceserver.classification.TypeDTO;
 import com.phatdo.blog.resourceserver.dto.requests.CreateBlogDTO;
 import com.phatdo.blog.resourceserver.dto.requests.UpdateBlogDTO;
+import com.phatdo.blog.resourceserver.exception.CustomError;
 import com.phatdo.blog.resourceserver.exception.CustomException;
 import com.phatdo.blog.resourceserver.models.Blog;
 import com.phatdo.blog.resourceserver.models.User;
 import com.phatdo.blog.resourceserver.services.BlogService;
 
-import jakarta.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatusCode;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,8 +35,8 @@ public class BlogController {
             Blog blog = blogService.saveBlog(form.title(), form.content(), form.type(), user);
             return ResponseEntity.ok(blog.toDTO());
         }
-        catch (ConstraintViolationException e) {
-            return ResponseEntity.badRequest().build();
+        catch (Exception e) {
+            return new ResponseEntity<>((new CustomException(CustomError.INVALID_FORM)).toDTO(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -45,7 +45,7 @@ public class BlogController {
         try {
             return ResponseEntity.ok(blogService.getBlog(id).toDTO());
         } catch (CustomException e) {
-            return new ResponseEntity<>(e.toDTO(), HttpStatusCode.valueOf(e.getCode()));
+            return new ResponseEntity<>(e.toDTO(), e.getStatus());
         }
     }
 
@@ -65,8 +65,8 @@ public class BlogController {
                             form.title(),
                             form.content())
                     .toDTO());
-        } catch (CustomException e) {
-            return new ResponseEntity<>(e.toDTO(), HttpStatusCode.valueOf(e.getCode()));
+        } catch (Exception e) {
+            return new ResponseEntity<>((new CustomException(CustomError.INVALID_FORM)).toDTO(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -77,7 +77,7 @@ public class BlogController {
             return ResponseEntity.noContent().build();
         }
         catch (CustomException e) {
-            return new ResponseEntity<>(e.toDTO(), HttpStatusCode.valueOf(e.getCode()));
+            return new ResponseEntity<>(e.toDTO(), e.getStatus());
         }
     }
 }
