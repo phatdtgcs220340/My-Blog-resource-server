@@ -40,6 +40,16 @@ public class ReplyService {
     }
 
     @PreAuthorize("hasAuthority('ROLE_ADMIN') || authentication.principal.username == #user.username")
+    public Reply updateReply(long id, String content, User user) throws CustomException {
+        return replyRepository.findById(id)
+                .map(reply -> {
+            reply.setContent(content);
+            return replyRepository.save(reply);
+        })
+                .orElseThrow(() -> new CustomException(CustomError.REPLY_NOT_FOUND));
+    }
+
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') || authentication.principal.username == #user.username")
     public void deleteReply(long id, User user) throws CustomException {
         Optional<Reply> optReply = replyRepository.findById(id);
         if (optReply.isPresent()) {
