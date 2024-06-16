@@ -45,10 +45,10 @@ public class Blog {
         @JoinColumn(name = "user_id")
         private final User user;
 
-        @OneToMany(mappedBy = "blog", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+        @OneToMany(mappedBy = "blog", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
         private final Set<BlogLike> likes = new HashSet<>();
 
-        @OneToMany(mappedBy = "blog", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+        @OneToMany(mappedBy = "blog", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
         private final Set<Reply> replies = new HashSet<>();
 
         public OneBlogDTO toDTO() {
@@ -69,5 +69,10 @@ public class Blog {
         @Override
         public int hashCode() {
                 return Objects.hash(id); // Or any other unique identifier for User
+        }
+
+        @Override
+        public String toString() {
+                return String.format("Title: %s%nContent: %s%nType: %s", title, content, blogType);
         }
 }

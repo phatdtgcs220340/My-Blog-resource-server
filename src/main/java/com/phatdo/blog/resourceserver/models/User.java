@@ -83,4 +83,8 @@ public class User {
     public int hashCode() {
         return Objects.hash(id); // Or any other unique identifier for User
     }
+    @Override
+    public String toString() {
+        return String.format("Full name: %s%nUsername: %s", fullName, username);
+    }
 }

@@ -41,7 +41,7 @@ public class Reply {
     private final Blog blog;
 
     @OneToMany(mappedBy = "reply",
-            fetch = FetchType.EAGER,
+            fetch = FetchType.LAZY,
             cascade = CascadeType.ALL,
             orphanRemoval = true)
     private final Set<ReplyLike> likes = new HashSet<>();
@@ -62,5 +62,10 @@ public class Reply {
     @Override
     public int hashCode() {
         return Objects.hash(id); // Or any other unique identifier for User
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Content: %s%nBlogId: %d", content, blog.getId());
     }
 }
