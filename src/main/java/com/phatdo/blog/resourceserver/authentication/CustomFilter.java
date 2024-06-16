@@ -7,6 +7,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Component;
@@ -30,12 +31,10 @@ public class CustomFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-        JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder
-                        .getContext()
-                        .getAuthentication();
-        if (authentication != null) {
-            String fullName = authentication.getTokenAttributes().get("fullName").toString();
-            User user = userService.processOAuth2Login(fullName, authentication.getName(), authentication.getAuthorities());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication instanceof JwtAuthenticationToken jwtAuthentication) {
+            String fullName = jwtAuthentication.getTokenAttributes().get("fullName").toString();
+            User user = userService.processOAuth2Login(fullName, authentication.getName(), jwtAuthentication.getAuthorities());
             UserContext.setUser(user);
         }
         try {
