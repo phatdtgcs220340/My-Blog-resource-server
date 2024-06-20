@@ -48,11 +48,12 @@ public class ReplyController {
         }
     }
 
-    @PatchMapping
-    public ResponseEntity<TypeDTO> update(@RequestBody UpdateReplyDTO form) {
+    @PatchMapping(path = "{id}")
+    public ResponseEntity<TypeDTO> update(@RequestBody UpdateReplyDTO form,
+                                          @PathVariable Long id) {
         try {
             return ResponseEntity.ok(replyService
-                        .updateReply(form.id(), form.newContent(), UserContext.getUser())
+                        .updateReply(id, form.newContent(), UserContext.getUser())
                     .toDTO());
         }
         catch (CustomException e) {
