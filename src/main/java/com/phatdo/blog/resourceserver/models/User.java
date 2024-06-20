@@ -3,8 +3,6 @@ package com.phatdo.blog.resourceserver.models;
 import com.phatdo.blog.resourceserver.classification.UserRole;
 import com.phatdo.blog.resourceserver.dto.responses.UserDTO;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
