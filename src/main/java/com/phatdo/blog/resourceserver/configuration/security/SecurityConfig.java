@@ -30,7 +30,9 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(c -> c
-                        .requestMatchers(HttpMethod.GET,"/api/v1/blog").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/api/v1/user").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/api/v1/blog", "/api/v1/blog/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/reply").permitAll()
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(c -> c
                         .jwt(j -> j
