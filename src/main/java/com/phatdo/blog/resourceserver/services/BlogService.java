@@ -30,7 +30,6 @@ public class BlogService {
      * @param user : user whom pass by UserContext
      * @return A Blog if successfully save
      */
-    // chua handle duoc form thieu data
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public Blog saveBlog(String title, String content, BlogType type, User user) {
         Blog blog = new Blog(type, user);
@@ -68,7 +67,6 @@ public class BlogService {
      * @return : An updated blog
      * @throws CustomException : will be thrown if the blog isn't existed
      */
-    // chua handle duoc thieu data
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public Blog updateBlog(Long id, String title, String content) throws CustomException {
            return blogRepository.findById(id)
