@@ -1,9 +1,9 @@
 package com.phatdo.blog.resourceserver.models;
 
 import com.phatdo.blog.resourceserver.classification.BlogType;
-import com.phatdo.blog.resourceserver.dto.responses.OneBlogDTO;
+import com.phatdo.blog.resourceserver.dto.responses.FullBlogDTO;
+import com.phatdo.blog.resourceserver.dto.responses.PartialBlogDTO;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,14 +27,11 @@ public class Blog {
         @Column(unique = true, nullable = false, name = "blog_id")
         private long id;
 
-        @NotNull
         private String title;
 
-        @NotNull
         @Column(columnDefinition = "TEXT")
         private String content;
 
-        @NotNull
         private final BlogType blogType;
 
         private final Timestamp createdDate = Timestamp.from(Instant.now());
@@ -51,10 +48,10 @@ public class Blog {
         @OneToMany(mappedBy = "blog", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
         private final Set<Reply> replies = new HashSet<>();
 
-        public OneBlogDTO toDTO() {
+        public FullBlogDTO toDTO() {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy - HH:mm a");
                 String modifiedDateStr = modifiedDate.toLocalDateTime().format(formatter);
-                return new OneBlogDTO(
+                return new FullBlogDTO(
                                 id,
                                 title,
                                 content,
@@ -64,6 +61,20 @@ public class Blog {
                                 user.getFullName(),
                                 likes.size(),
                                 replies.size());
+        }
+
+        public PartialBlogDTO toPartialDTO() {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy - HH:mm a");
+                String modifiedDateStr = modifiedDate.toLocalDateTime().format(formatter);
+                return new PartialBlogDTO(
+                        id,
+                        title,
+                        blogType.toString(),
+                        modifiedDateStr,
+                        user.getId(),
+                        user.getFullName(),
+                        likes.size(),
+                        replies.size());
         }
 
         @Override
