@@ -29,11 +29,8 @@ public class User {
     @Column(unique = true, nullable = false, name = "user_id")
     private long id;
 
-    @NotNull
     private final String fullName;
 
-    @NotNull
-    @Email
     @Column(unique = true, nullable = false)
     private final String username;
 
