@@ -1,7 +1,6 @@
 package com.phatdo.blog.resourceserver.models;
 
 import com.phatdo.blog.resourceserver.classification.UserRole;
-import com.phatdo.blog.resourceserver.dto.responses.UserDTO;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -10,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /***
@@ -59,20 +57,6 @@ public class User {
             cascade = CascadeType.ALL,
             orphanRemoval = true)
     private final Set<Reply> replyLikes = new HashSet<>();
-
-    public UserDTO toDTO() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy - HH:mm a");
-        String modifiedDateStr = participatedDate.toLocalDateTime().format(formatter);
-        return new UserDTO(
-                id,
-                fullName,
-                username,
-                roles
-                        .stream()
-                        .map(Enum::toString)
-                        .toList(),
-                modifiedDateStr);
-    }
 
     @Override
     public int hashCode() {

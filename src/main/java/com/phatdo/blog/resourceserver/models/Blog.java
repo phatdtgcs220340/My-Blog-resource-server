@@ -1,8 +1,6 @@
 package com.phatdo.blog.resourceserver.models;
 
 import com.phatdo.blog.resourceserver.classification.BlogType;
-import com.phatdo.blog.resourceserver.dto.responses.FullBlogDTO;
-import com.phatdo.blog.resourceserver.dto.responses.PartialBlogDTO;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -11,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -47,35 +44,6 @@ public class Blog {
 
         @OneToMany(mappedBy = "blog", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
         private final Set<Reply> replies = new HashSet<>();
-
-        public FullBlogDTO toDTO() {
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy - HH:mm a");
-                String modifiedDateStr = modifiedDate.toLocalDateTime().format(formatter);
-                return new FullBlogDTO(
-                                id,
-                                title,
-                                content,
-                                blogType.toString(),
-                                modifiedDateStr,
-                                user.getId(),
-                                user.getFullName(),
-                                likes.size(),
-                                replies.size());
-        }
-
-        public PartialBlogDTO toPartialDTO() {
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy - HH:mm a");
-                String modifiedDateStr = modifiedDate.toLocalDateTime().format(formatter);
-                return new PartialBlogDTO(
-                        id,
-                        title,
-                        blogType.toString(),
-                        modifiedDateStr,
-                        user.getId(),
-                        user.getFullName(),
-                        likes.size(),
-                        replies.size());
-        }
 
         @Override
         public int hashCode() {
