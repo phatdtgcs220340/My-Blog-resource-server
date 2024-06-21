@@ -5,6 +5,9 @@ import com.phatdo.blog.resourceserver.classification.TypeDTO;
 import com.phatdo.blog.resourceserver.dto.requests.CreateReplyDTO;
 import com.phatdo.blog.resourceserver.dto.requests.UpdateReplyDTO;
 import com.phatdo.blog.resourceserver.exception.CustomException;
+import com.phatdo.blog.resourceserver.mappers.DTOMapper;
+import com.phatdo.blog.resourceserver.mappers.ErrorMapper;
+import com.phatdo.blog.resourceserver.mappers.ReplyMapper;
 import com.phatdo.blog.resourceserver.models.Reply;
 import com.phatdo.blog.resourceserver.models.User;
 import com.phatdo.blog.resourceserver.services.ReplyService;
@@ -19,6 +22,8 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/v1/reply")
 public class ReplyController {
     private final ReplyService replyService;
+    private final DTOMapper<Reply> mapper = new ReplyMapper();
+    private final DTOMapper<CustomException> errorMapper = new ErrorMapper();
 
     @Autowired
     public ReplyController(ReplyService replyService) {
@@ -30,7 +35,7 @@ public class ReplyController {
         try {
             return ResponseEntity.ok(replyService.findByBlog(blogId)
                     .stream()
-                    .map(Reply::toDTO)
+                    .map(mapper::toDTO)
                     .collect(Collectors.toList()));
         }
         catch (CustomException e) {
@@ -42,9 +47,10 @@ public class ReplyController {
     public ResponseEntity<TypeDTO> save(@RequestBody CreateReplyDTO form) {
         try {
             User user = UserContext.getUser();
-            return ResponseEntity.ok(replyService.save(form.content(), user, form.blogId()).toDTO());
+            Reply reply = replyService.save(form.content(), user, form.blogId());
+            return ResponseEntity.ok(mapper.toDTO(reply));
         } catch (CustomException e) {
-            return new ResponseEntity<>(e.toDTO(), e.getStatus());
+            return new ResponseEntity<>(errorMapper.toDTO(e), e.getStatus());
         }
     }
 
@@ -52,12 +58,12 @@ public class ReplyController {
     public ResponseEntity<TypeDTO> update(@RequestBody UpdateReplyDTO form,
                                           @PathVariable Long id) {
         try {
-            return ResponseEntity.ok(replyService
-                        .updateReply(id, form.newContent(), UserContext.getUser())
-                    .toDTO());
+            Reply reply = replyService
+                    .updateReply(id, form.newContent(), UserContext.getUser());
+            return ResponseEntity.ok(mapper.toDTO(reply));
         }
         catch (CustomException e) {
-            return new ResponseEntity<>(e.toDTO(), e.getStatus());
+            return new ResponseEntity<>(errorMapper.toDTO(e), e.getStatus());
         }
     }
 
@@ -67,7 +73,7 @@ public class ReplyController {
             replyService.deleteReply(id, UserContext.getUser());
             return ResponseEntity.noContent().build();
         } catch (CustomException e) {
-            return new ResponseEntity<>(e.toDTO(), e.getStatus());
+            return new ResponseEntity<>(errorMapper.toDTO(e), e.getStatus());
         }
     }
 }
