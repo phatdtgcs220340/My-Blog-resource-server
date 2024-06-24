@@ -11,6 +11,7 @@ import com.phatdo.blog.resourceserver.mappers.ReplyMapper;
 import com.phatdo.blog.resourceserver.models.replies.Reply;
 import com.phatdo.blog.resourceserver.models.users.User;
 import com.phatdo.blog.resourceserver.services.ReplyService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -44,7 +45,7 @@ public class ReplyController {
     }
 
     @PostMapping
-    public ResponseEntity<TypeDTO> save(@RequestBody CreateReplyDTO form) {
+    public ResponseEntity<TypeDTO> save(@RequestBody @Valid CreateReplyDTO form) {
         try {
             User user = UserContext.getUser();
             Reply reply = replyService.save(form.content(), user, form.blogId());
@@ -55,7 +56,7 @@ public class ReplyController {
     }
 
     @PatchMapping(path = "{id}")
-    public ResponseEntity<TypeDTO> update(@RequestBody UpdateReplyDTO form,
+    public ResponseEntity<TypeDTO> update(@RequestBody @Valid UpdateReplyDTO form,
                                           @PathVariable Long id) {
         try {
             Reply reply = replyService

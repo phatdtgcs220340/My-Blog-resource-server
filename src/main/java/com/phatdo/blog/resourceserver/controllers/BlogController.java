@@ -9,7 +9,6 @@ import com.phatdo.blog.resourceserver.mappers.BlogMapper;
 import com.phatdo.blog.resourceserver.mappers.DTOMapper;
 import com.phatdo.blog.resourceserver.mappers.ErrorMapper;
 import com.phatdo.blog.resourceserver.models.blogs.Blog;
-import com.phatdo.blog.resourceserver.models.users.User;
 import com.phatdo.blog.resourceserver.services.BlogService;
 
 import jakarta.validation.Valid;
@@ -34,8 +33,7 @@ public class BlogController {
 
     @PostMapping
     public ResponseEntity<TypeDTO> createBlog(@RequestBody @Valid CreateBlogDTO form) {
-        User user = UserContext.getUser();
-        Blog blog = blogService.saveBlog(form.title(), form.content(), form.type(), user);
+        Blog blog = blogService.saveBlog(form.title(), form.content(), form.type(), UserContext.getUser());
         return ResponseEntity.ok(mapper.toDTO(blog));
     }
 
@@ -57,7 +55,7 @@ public class BlogController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<TypeDTO> updateBlog(@RequestBody UpdateBlogDTO form,
+    public ResponseEntity<TypeDTO> updateBlog(@RequestBody @Valid UpdateBlogDTO form,
                                               @PathVariable long id) {
         try {
             Blog blog = blogService.updateBlog(
@@ -73,7 +71,7 @@ public class BlogController {
     @DeleteMapping("/{id}")
     public ResponseEntity<TypeDTO> deleteBlog(@PathVariable long id) {
         try {
-            blogService.deleteBlog(id);
+            blogService.deleteBlog(id, UserContext.getUser());
             return ResponseEntity.noContent().build();
         }
         catch (CustomException e) {
