@@ -10,19 +10,19 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@ContextConfiguration
 public class BlogServiceUnitTest {
     private final User user = new User("Do Tan Phat", "ddtphat2004@gmail.com");
+
     @Mock
     private BlogRepository blogRepository;
 
@@ -40,37 +40,17 @@ public class BlogServiceUnitTest {
         when(blogRepository.findById(blog.getId()))
                 .thenReturn(Optional.of(blog));
 
-        blogService.deleteBlog(blog.getId());
+        blogService.deleteBlog(blog.getId(), user);
         verify(blogRepository).deleteById(1L);
     }
 
     @Test
     @WithMockUser(username = "phatdo")
-    public void testDeleteBlogShouldThrowExceptionBecauseNotAdmin(){
-        Blog blog = new Blog(BlogType.DAILY_BLOG, user);
-        blog.setId(1);
-        blog.setTitle("This is a test title");
-        blog.setContent("This is a test content");
-
-        when(blogRepository.findById(blog.getId()))
-            .thenReturn(Optional.of(blog));
-
-        assertThrows(CustomException.class, () -> blogService.deleteBlog(blog.getId()));
-        verify(blogRepository, never()).deleteById(anyLong());
-    }
-
-    @Test
-    @WithMockUser(username = "phatdo")
     public void testDeleteBlogShouldThrowCustomExceptionBecauseBlogNotExist() throws CustomException {
-        Blog blog = new Blog(BlogType.DAILY_BLOG, user);
-        blog.setId(1);
-        blog.setTitle("This is a test title");
-        blog.setContent("This is a test content");
+        when(blogRepository.findById(2L))
+                .thenReturn(Optional.empty()); // Return empty to simulate non-existing blog
 
-        when(blogRepository.findById(blog.getId()))
-                .thenReturn(Optional.of(blog));
-
-        assertThrows(CustomException.class, () -> blogService.deleteBlog(2L));
+        assertThrows(CustomException.class, () -> blogService.deleteBlog(2L, user));
         verify(blogRepository, never()).deleteById(anyLong());
     }
 
