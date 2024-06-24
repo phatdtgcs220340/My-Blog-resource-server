@@ -82,13 +82,12 @@ public class BlogService {
     /**
      * @brief Delete a blog and remove it from user's blog list
      * @param id : expected blog to be deleted
-     * @throws CustomException : will be throw if couldn't find blog
+     * @throws CustomException : will be thrown if it couldn't find blog
      */
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public void deleteBlog(Long id) throws CustomException {
+    public void deleteBlog(Long id, User user) throws CustomException {
         Optional<Blog> optBlog = blogRepository.findById(id);
         if (optBlog.isPresent()) {
-            User user = optBlog.get().getUser();
             user.getBlogs().remove(optBlog.get());
             blogRepository.deleteById(id);
         }
