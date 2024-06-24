@@ -1,7 +1,9 @@
 package com.phatdo.blog.resourceserver.models.users;
 
+import com.phatdo.blog.resourceserver.models.bloglikes.BlogLike;
 import com.phatdo.blog.resourceserver.models.blogs.Blog;
 import com.phatdo.blog.resourceserver.models.replies.Reply;
+import com.phatdo.blog.resourceserver.models.replylikes.ReplyLike;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -51,13 +53,13 @@ public class User {
             fetch = FetchType.EAGER,
             cascade = CascadeType.ALL,
             orphanRemoval = true)
-    private final Set<Reply> blogLikes = new HashSet<>();
+    private final Set<BlogLike> blogLikes = new HashSet<>();
 
     @OneToMany(mappedBy = "user",
             fetch = FetchType.EAGER,
             cascade = CascadeType.ALL,
             orphanRemoval = true)
-    private final Set<Reply> replyLikes = new HashSet<>();
+    private final Set<ReplyLike> replyLikes = new HashSet<>();
 
     @Override
     public int hashCode() {
