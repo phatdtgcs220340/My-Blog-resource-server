@@ -1,4 +1,4 @@
-package com.phatdo.blog.resourceserver.logging;
+package com.phatdo.blog.resourceserver.interceptors;
 
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
