@@ -2,8 +2,8 @@ package com.phatdo.blog.resourceserver.services;
 
 import com.phatdo.blog.resourceserver.exception.CustomError;
 import com.phatdo.blog.resourceserver.exception.CustomException;
-import com.phatdo.blog.resourceserver.models.Reply;
-import com.phatdo.blog.resourceserver.models.User;
+import com.phatdo.blog.resourceserver.models.replies.Reply;
+import com.phatdo.blog.resourceserver.models.users.User;
 import com.phatdo.blog.resourceserver.repositories.BlogRepository;
 import com.phatdo.blog.resourceserver.repositories.ReplyRepository;
 import org.springframework.security.access.prepost.PreAuthorize;

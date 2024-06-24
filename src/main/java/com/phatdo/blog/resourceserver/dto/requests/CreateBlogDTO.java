@@ -1,6 +1,6 @@
 package com.phatdo.blog.resourceserver.dto.requests;
 
-import com.phatdo.blog.resourceserver.classification.BlogType;
+import com.phatdo.blog.resourceserver.models.blogs.BlogType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 

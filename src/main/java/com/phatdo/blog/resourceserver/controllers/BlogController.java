@@ -1,15 +1,15 @@
 package com.phatdo.blog.resourceserver.controllers;
 
 import com.phatdo.blog.resourceserver.authentication.UserContext;
-import com.phatdo.blog.resourceserver.classification.TypeDTO;
+import com.phatdo.blog.resourceserver.dto.responses.TypeDTO;
 import com.phatdo.blog.resourceserver.dto.requests.CreateBlogDTO;
 import com.phatdo.blog.resourceserver.dto.requests.UpdateBlogDTO;
 import com.phatdo.blog.resourceserver.exception.CustomException;
 import com.phatdo.blog.resourceserver.mappers.BlogMapper;
 import com.phatdo.blog.resourceserver.mappers.DTOMapper;
 import com.phatdo.blog.resourceserver.mappers.ErrorMapper;
-import com.phatdo.blog.resourceserver.models.Blog;
-import com.phatdo.blog.resourceserver.models.User;
+import com.phatdo.blog.resourceserver.models.blogs.Blog;
+import com.phatdo.blog.resourceserver.models.users.User;
 import com.phatdo.blog.resourceserver.services.BlogService;
 
 import jakarta.validation.Valid;

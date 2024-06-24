@@ -1,6 +1,7 @@
-package com.phatdo.blog.resourceserver.models;
+package com.phatdo.blog.resourceserver.models.users;
 
-import com.phatdo.blog.resourceserver.classification.UserRole;
+import com.phatdo.blog.resourceserver.models.blogs.Blog;
+import com.phatdo.blog.resourceserver.models.replies.Reply;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Data;

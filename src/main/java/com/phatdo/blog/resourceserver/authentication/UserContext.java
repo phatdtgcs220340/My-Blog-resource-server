@@ -1,6 +1,6 @@
 package com.phatdo.blog.resourceserver.authentication;
 
-import com.phatdo.blog.resourceserver.models.User;
+import com.phatdo.blog.resourceserver.models.users.User;
 
 public class UserContext {
     private static final ThreadLocal<User> userHolder = new ThreadLocal<>();

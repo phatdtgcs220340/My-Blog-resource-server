@@ -1,8 +1,8 @@
 package com.phatdo.blog.resourceserver.services;
 
-import com.phatdo.blog.resourceserver.models.User;
+import com.phatdo.blog.resourceserver.models.users.User;
 import com.phatdo.blog.resourceserver.repositories.UserRepository;
-import com.phatdo.blog.resourceserver.classification.UserRole;
+import com.phatdo.blog.resourceserver.models.users.UserRole;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;

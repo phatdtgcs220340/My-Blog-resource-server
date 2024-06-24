@@ -1,6 +1,6 @@
 package com.phatdo.blog.resourceserver.mappers;
 
-import com.phatdo.blog.resourceserver.classification.TypeDTO;
+import com.phatdo.blog.resourceserver.dto.responses.TypeDTO;
 import com.phatdo.blog.resourceserver.dto.responses.ErrorDTO;
 import com.phatdo.blog.resourceserver.exception.CustomException;
 

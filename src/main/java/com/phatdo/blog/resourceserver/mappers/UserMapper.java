@@ -1,7 +1,7 @@
 package com.phatdo.blog.resourceserver.mappers;
 
 import com.phatdo.blog.resourceserver.dto.responses.UserDTO;
-import com.phatdo.blog.resourceserver.models.User;
+import com.phatdo.blog.resourceserver.models.users.User;
 
 import java.time.format.DateTimeFormatter;
 

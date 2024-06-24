@@ -1,15 +1,15 @@
 package com.phatdo.blog.resourceserver.controllers;
 
 import com.phatdo.blog.resourceserver.authentication.UserContext;
-import com.phatdo.blog.resourceserver.classification.TypeDTO;
+import com.phatdo.blog.resourceserver.dto.responses.TypeDTO;
 import com.phatdo.blog.resourceserver.dto.requests.CreateReplyDTO;
 import com.phatdo.blog.resourceserver.dto.requests.UpdateReplyDTO;
 import com.phatdo.blog.resourceserver.exception.CustomException;
 import com.phatdo.blog.resourceserver.mappers.DTOMapper;
 import com.phatdo.blog.resourceserver.mappers.ErrorMapper;
 import com.phatdo.blog.resourceserver.mappers.ReplyMapper;
-import com.phatdo.blog.resourceserver.models.Reply;
-import com.phatdo.blog.resourceserver.models.User;
+import com.phatdo.blog.resourceserver.models.replies.Reply;
+import com.phatdo.blog.resourceserver.models.users.User;
 import com.phatdo.blog.resourceserver.services.ReplyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

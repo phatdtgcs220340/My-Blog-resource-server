@@ -1,8 +1,8 @@
 package com.phatdo.blog.resourceserver.mappers;
 
-import com.phatdo.blog.resourceserver.classification.TypeDTO;
+import com.phatdo.blog.resourceserver.dto.responses.TypeDTO;
 import com.phatdo.blog.resourceserver.dto.responses.ReplyDTO;
-import com.phatdo.blog.resourceserver.models.Reply;
+import com.phatdo.blog.resourceserver.models.replies.Reply;
 
 import java.time.format.DateTimeFormatter;
 

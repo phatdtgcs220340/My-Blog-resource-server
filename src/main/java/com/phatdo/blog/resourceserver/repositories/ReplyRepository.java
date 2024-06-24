@@ -1,6 +1,6 @@
 package com.phatdo.blog.resourceserver.repositories;
 
-import com.phatdo.blog.resourceserver.models.Reply;
+import com.phatdo.blog.resourceserver.models.replies.Reply;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
