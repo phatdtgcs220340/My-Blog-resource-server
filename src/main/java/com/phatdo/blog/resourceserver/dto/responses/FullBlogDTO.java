@@ -6,7 +6,7 @@ public record FullBlogDTO(
         String title,
         String content,
         String type,
-        String modifiedDateFormatted,
+        String dateAudit,
         long userId,
         String fullName,
         int totalLike,
