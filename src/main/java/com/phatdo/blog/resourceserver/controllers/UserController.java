@@ -2,6 +2,7 @@ package com.phatdo.blog.resourceserver.controllers;
 
 import com.phatdo.blog.resourceserver.authentication.UserContext;
 import com.phatdo.blog.resourceserver.dto.responses.TypeDTO;
+import com.phatdo.blog.resourceserver.mappers.DTOMapperE;
 import com.phatdo.blog.resourceserver.mappers.DTOMapperFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,6 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<TypeDTO> getUser() {
-        return ResponseEntity.ok(mapperFactory.getMapper("user").toDTO(UserContext.getUser()));
+        return ResponseEntity.ok(mapperFactory.getMapper(DTOMapperE.USER).toDTO(UserContext.getUser()));
     }
 }
