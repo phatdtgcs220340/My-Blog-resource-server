@@ -5,9 +5,7 @@ import com.phatdo.blog.resourceserver.dto.responses.TypeDTO;
 import com.phatdo.blog.resourceserver.dto.requests.CreateReplyDTO;
 import com.phatdo.blog.resourceserver.dto.requests.UpdateReplyDTO;
 import com.phatdo.blog.resourceserver.exception.CustomException;
-import com.phatdo.blog.resourceserver.mappers.DTOMapper;
-import com.phatdo.blog.resourceserver.mappers.ErrorMapper;
-import com.phatdo.blog.resourceserver.mappers.ReplyMapper;
+import com.phatdo.blog.resourceserver.mappers.DTOMapperFactory;
 import com.phatdo.blog.resourceserver.models.replies.Reply;
 import com.phatdo.blog.resourceserver.models.users.User;
 import com.phatdo.blog.resourceserver.services.ReplyService;
@@ -23,12 +21,12 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/v1/reply")
 public class ReplyController {
     private final ReplyService replyService;
-    private final DTOMapper<Reply> mapper = new ReplyMapper();
-    private final DTOMapper<CustomException> errorMapper = new ErrorMapper();
+    private final DTOMapperFactory mapperFactory;
 
     @Autowired
-    public ReplyController(ReplyService replyService) {
+    public ReplyController(ReplyService replyService, DTOMapperFactory mapperFactory) {
         this.replyService = replyService;
+        this.mapperFactory = mapperFactory;
     }
 
     @GetMapping
@@ -36,7 +34,7 @@ public class ReplyController {
         try {
             return ResponseEntity.ok(replyService.findByBlog(blogId)
                     .stream()
-                    .map(mapper::toDTO)
+                    .map(mapperFactory.getMapper("reply")::toDTO)
                     .collect(Collectors.toList()));
         }
         catch (CustomException e) {
@@ -49,9 +47,9 @@ public class ReplyController {
         try {
             User user = UserContext.getUser();
             Reply reply = replyService.save(form.content(), user, form.blogId());
-            return ResponseEntity.ok(mapper.toDTO(reply));
+            return ResponseEntity.ok(mapperFactory.getMapper("reply").toDTO(reply));
         } catch (CustomException e) {
-            return new ResponseEntity<>(errorMapper.toDTO(e), e.getStatus());
+            return new ResponseEntity<>(mapperFactory.getMapper("error").toDTO(e), e.getStatus());
         }
     }
 
@@ -61,10 +59,10 @@ public class ReplyController {
         try {
             Reply reply = replyService
                     .updateReply(id, form.newContent(), UserContext.getUser());
-            return ResponseEntity.ok(mapper.toDTO(reply));
+            return ResponseEntity.ok(mapperFactory.getMapper("reply").toDTO(reply));
         }
         catch (CustomException e) {
-            return new ResponseEntity<>(errorMapper.toDTO(e), e.getStatus());
+            return new ResponseEntity<>(mapperFactory.getMapper("error").toDTO(e), e.getStatus());
         }
     }
 
@@ -74,7 +72,7 @@ public class ReplyController {
             replyService.deleteReply(id, UserContext.getUser());
             return ResponseEntity.noContent().build();
         } catch (CustomException e) {
-            return new ResponseEntity<>(errorMapper.toDTO(e), e.getStatus());
+            return new ResponseEntity<>(mapperFactory.getMapper("error").toDTO(e), e.getStatus());
         }
     }
 }

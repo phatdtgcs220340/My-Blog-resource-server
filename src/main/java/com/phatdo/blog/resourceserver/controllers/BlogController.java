@@ -5,9 +5,7 @@ import com.phatdo.blog.resourceserver.dto.responses.TypeDTO;
 import com.phatdo.blog.resourceserver.dto.requests.CreateBlogDTO;
 import com.phatdo.blog.resourceserver.dto.requests.UpdateBlogDTO;
 import com.phatdo.blog.resourceserver.exception.CustomException;
-import com.phatdo.blog.resourceserver.mappers.BlogMapper;
-import com.phatdo.blog.resourceserver.mappers.DTOMapper;
-import com.phatdo.blog.resourceserver.mappers.ErrorMapper;
+import com.phatdo.blog.resourceserver.mappers.DTOMapperFactory;
 import com.phatdo.blog.resourceserver.models.blogs.Blog;
 import com.phatdo.blog.resourceserver.services.BlogService;
 
@@ -23,27 +21,27 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/blog")
 public class BlogController {
     private final BlogService blogService;
-    private final DTOMapper<Blog> mapper = new BlogMapper();
-    private final DTOMapper<CustomException> errorMapper = new ErrorMapper();
+    private final DTOMapperFactory mapperFactory;
 
     @Autowired
-    public BlogController(BlogService blogService) {
+    public BlogController(BlogService blogService, DTOMapperFactory mapperFactory) {
         this.blogService = blogService;
+        this.mapperFactory = mapperFactory;
     }
 
     @PostMapping
     public ResponseEntity<TypeDTO> createBlog(@RequestBody @Valid CreateBlogDTO form) {
         Blog blog = blogService.saveBlog(form.title(), form.content(), form.type(), UserContext.getUser());
-        return ResponseEntity.ok(mapper.toDTO(blog));
+        return ResponseEntity.ok(mapperFactory.getMapper("blog").toDTO(blog));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<TypeDTO> getBlog(@PathVariable long id) {
         try {
             Blog blog = blogService.getBlog(id);
-            return ResponseEntity.ok(mapper.toDTO(blog));
+            return ResponseEntity.ok(mapperFactory.getMapper("blog").toDTO(blog));
         } catch (CustomException e) {
-            return new ResponseEntity<>(errorMapper.toDTO(e), e.getStatus());
+            return new ResponseEntity<>(mapperFactory.getMapper("error").toDTO(e), e.getStatus());
         }
     }
 
@@ -51,7 +49,7 @@ public class BlogController {
     public ResponseEntity<Page<TypeDTO>> getBlogs(@RequestParam(defaultValue = "0") int page,
                                                   @RequestParam(defaultValue = "5") int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return ResponseEntity.ok(blogService.getAllBlogs(pageable).map(mapper::toDTO));
+        return ResponseEntity.ok(blogService.getAllBlogs(pageable).map(mapperFactory.getMapper("blog")::toDTO));
     }
 
     @PatchMapping("/{id}")
@@ -62,9 +60,9 @@ public class BlogController {
                     id,
                     form.title(),
                     form.content());
-            return ResponseEntity.ok(mapper.toDTO(blog));
+            return ResponseEntity.ok(mapperFactory.getMapper("blog").toDTO(blog));
         } catch (CustomException e) {
-            return new ResponseEntity<>(errorMapper.toDTO(e), e.getStatus());
+            return new ResponseEntity<>(mapperFactory.getMapper("error").toDTO(e), e.getStatus());
         }
     }
 
@@ -75,7 +73,7 @@ public class BlogController {
             return ResponseEntity.noContent().build();
         }
         catch (CustomException e) {
-            return new ResponseEntity<>(errorMapper.toDTO(e), e.getStatus());
+            return new ResponseEntity<>(mapperFactory.getMapper("error").toDTO(e), e.getStatus());
         }
     }
 }
