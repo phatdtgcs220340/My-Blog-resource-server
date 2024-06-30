@@ -1,11 +1,12 @@
-package com.phatdo.blog.resourceserver.mappers;
+package com.phatdo.blog.resourceserver.mappers.suppliers;
 
 import com.phatdo.blog.resourceserver.dto.responses.UserDTO;
+import com.phatdo.blog.resourceserver.mappers.DTOMapper;
 import com.phatdo.blog.resourceserver.models.users.User;
 
 import java.time.format.DateTimeFormatter;
 
-public class UserMapper implements  DTOMapper<User> {
+public class UserMapper implements DTOMapper<User> {
     @Override
     public UserDTO toDTO(User entity) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy - HH:mm a");
