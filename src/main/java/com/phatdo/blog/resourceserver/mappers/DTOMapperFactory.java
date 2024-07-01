@@ -1,9 +1,6 @@
 package com.phatdo.blog.resourceserver.mappers;
 
-import com.phatdo.blog.resourceserver.mappers.suppliers.BlogMapper;
-import com.phatdo.blog.resourceserver.mappers.suppliers.ErrorMapper;
-import com.phatdo.blog.resourceserver.mappers.suppliers.ReplyMapper;
-import com.phatdo.blog.resourceserver.mappers.suppliers.UserMapper;
+import com.phatdo.blog.resourceserver.mappers.suppliers.*;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -14,6 +11,7 @@ public class DTOMapperFactory {
             DTOMapperE.USER, new UserMapper(),
             DTOMapperE.BLOG, new BlogMapper(),
             DTOMapperE.REPLY, new ReplyMapper(),
+            DTOMapperE.PARTIAL_BLOG, new PartialBlogMapper(),
             DTOMapperE.ERROR, new ErrorMapper()
     );
 

@@ -50,7 +50,7 @@ public class BlogController {
     public ResponseEntity<Page<TypeDTO>> getBlogs(@RequestParam(defaultValue = "0") int page,
                                                   @RequestParam(defaultValue = "5") int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return ResponseEntity.ok(blogService.getAllBlogs(pageable).map(mapperFactory.getMapper(DTOMapperE.BLOG)::toDTO));
+        return ResponseEntity.ok(blogService.getAllBlogs(pageable).map(mapperFactory.getMapper(DTOMapperE.PARTIAL_BLOG)::toDTO));
     }
 
     @PatchMapping("/{id}")
