@@ -37,13 +37,9 @@ public class BlogController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TypeDTO> getBlog(@PathVariable long id) {
-        try {
-            Blog blog = blogService.getBlog(id);
-            return ResponseEntity.ok(mapperFactory.getMapper(DTOMapperE.BLOG).toDTO(blog));
-        } catch (CustomException e) {
-            return new ResponseEntity<>(mapperFactory.getMapper(DTOMapperE.ERROR).toDTO(e), e.getStatus());
-        }
+    public ResponseEntity<TypeDTO> getBlog(@PathVariable long id) throws CustomException {
+        Blog blog = blogService.getBlog(id);
+        return ResponseEntity.ok(mapperFactory.getMapper(DTOMapperE.BLOG).toDTO(blog));
     }
 
     @GetMapping
@@ -55,26 +51,17 @@ public class BlogController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<TypeDTO> updateBlog(@RequestBody @Valid UpdateBlogDTO form,
-                                              @PathVariable long id) {
-        try {
-            Blog blog = blogService.updateBlog(
-                    id,
-                    form.title(),
-                    form.content());
-            return ResponseEntity.ok(mapperFactory.getMapper(DTOMapperE.BLOG).toDTO(blog));
-        } catch (CustomException e) {
-            return new ResponseEntity<>(mapperFactory.getMapper(DTOMapperE.ERROR).toDTO(e), e.getStatus());
-        }
+                                              @PathVariable long id) throws CustomException {
+        Blog blog = blogService.updateBlog(
+                id,
+                form.title(),
+                form.content());
+        return ResponseEntity.ok(mapperFactory.getMapper(DTOMapperE.BLOG).toDTO(blog));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<TypeDTO> deleteBlog(@PathVariable long id) {
-        try {
-            blogService.deleteBlog(id, UserContext.getUser());
-            return ResponseEntity.noContent().build();
-        }
-        catch (CustomException e) {
-            return new ResponseEntity<>(mapperFactory.getMapper(DTOMapperE.ERROR).toDTO(e), e.getStatus());
-        }
+    public ResponseEntity<TypeDTO> deleteBlog(@PathVariable long id) throws CustomException {
+        blogService.deleteBlog(id, UserContext.getUser());
+        return ResponseEntity.noContent().build();
     }
 }

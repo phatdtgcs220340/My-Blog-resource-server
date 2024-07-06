@@ -31,49 +31,31 @@ public class ReplyController {
     }
 
     @GetMapping
-    public ResponseEntity<List<TypeDTO>> findByBlog(@RequestParam(name = "blogId") Long blogId) {
-        try {
-            return ResponseEntity.ok(replyService.findByBlog(blogId)
-                    .stream()
-                    .map(mapperFactory.getMapper(DTOMapperE.REPLY)::toDTO)
-                    .collect(Collectors.toList()));
-        }
-        catch (CustomException e) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<List<TypeDTO>> findByBlog(@RequestParam(name = "blogId") Long blogId) throws CustomException {
+        return ResponseEntity.ok(replyService.findByBlog(blogId)
+                .stream()
+                .map(mapperFactory.getMapper(DTOMapperE.REPLY)::toDTO)
+                .collect(Collectors.toList()));
     }
 
     @PostMapping
-    public ResponseEntity<TypeDTO> save(@RequestBody @Valid CreateReplyDTO form) {
-        try {
-            User user = UserContext.getUser();
-            Reply reply = replyService.save(form.content(), user, form.blogId());
-            return ResponseEntity.ok(mapperFactory.getMapper(DTOMapperE.REPLY).toDTO(reply));
-        } catch (CustomException e) {
-            return new ResponseEntity<>(mapperFactory.getMapper(DTOMapperE.ERROR).toDTO(e), e.getStatus());
-        }
+    public ResponseEntity<TypeDTO> save(@RequestBody @Valid CreateReplyDTO form) throws CustomException {
+        User user = UserContext.getUser();
+        Reply reply = replyService.save(form.content(), user, form.blogId());
+        return ResponseEntity.ok(mapperFactory.getMapper(DTOMapperE.REPLY).toDTO(reply));
     }
 
     @PatchMapping(path = "{id}")
     public ResponseEntity<TypeDTO> update(@RequestBody @Valid UpdateReplyDTO form,
-                                          @PathVariable Long id) {
-        try {
-            Reply reply = replyService
-                    .updateReply(id, form.newContent(), UserContext.getUser());
-            return ResponseEntity.ok(mapperFactory.getMapper(DTOMapperE.REPLY).toDTO(reply));
-        }
-        catch (CustomException e) {
-            return new ResponseEntity<>(mapperFactory.getMapper(DTOMapperE.ERROR).toDTO(e), e.getStatus());
-        }
+                                          @PathVariable Long id) throws CustomException {
+        Reply reply = replyService
+                .updateReply(id, form.newContent(), UserContext.getUser());
+        return ResponseEntity.ok(mapperFactory.getMapper(DTOMapperE.REPLY).toDTO(reply));
     }
 
     @DeleteMapping
-    public ResponseEntity<TypeDTO> delete(@RequestParam(name = "id") Long id) {
-        try {
-            replyService.deleteReply(id, UserContext.getUser());
-            return ResponseEntity.noContent().build();
-        } catch (CustomException e) {
-            return new ResponseEntity<>(mapperFactory.getMapper(DTOMapperE.ERROR).toDTO(e), e.getStatus());
-        }
+    public ResponseEntity<TypeDTO> delete(@RequestParam(name = "id") Long id) throws CustomException {
+        replyService.deleteReply(id, UserContext.getUser());
+        return ResponseEntity.noContent().build();
     }
 }
