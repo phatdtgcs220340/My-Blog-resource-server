@@ -35,3 +35,7 @@ out/
 
 ### VS Code ###
 .vscode/
+
+/src/main/resources/keystore.yml
+/src/main/resources/application-keystore.yml
+/src/main/resources/application-oauth2.yml

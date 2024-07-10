@@ -19,6 +19,8 @@ import org.springframework.web.filter.CorsFilter;
 public class SecurityConfig {
     @Value("${spring.security.oauth2.resource-server.jwt.jwk-set-uri}")
     private String keySetUri;
+    @Value("${oauth2-client.domain}")
+    private String clientDomain;
     private final JwtAuthenticationConverter converter;
 
     @Autowired
@@ -46,7 +48,7 @@ public class SecurityConfig {
     @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
-        config.addAllowedOrigin("http://localhost:5173");
+        config.addAllowedOrigin(clientDomain);
         config.addAllowedMethod("*");
         config.addAllowedHeader("*");
 

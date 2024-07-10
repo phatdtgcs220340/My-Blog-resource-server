@@ -14,5 +14,9 @@ spring:
       resource-server:
         jwt:
           jwk-set-uri: http://127.0.0.1:9000/oauth2/jwks
+  profiles:
+    include:
+      - keystore
+      - oauth2
 server:
   port: 9090
