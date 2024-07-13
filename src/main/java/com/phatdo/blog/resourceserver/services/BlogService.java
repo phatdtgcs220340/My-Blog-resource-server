@@ -30,7 +30,7 @@ public class BlogService {
      * @return A Blog if successfully save
      */
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public Blog saveBlog(CreateBlogDTO form, User user) throws Exception{
+    public Blog saveBlog(CreateBlogDTO form, User user) {
         Blog blog = new Blog(form.type(), user);
         blog.setTitle(form.title());
         blog.setContent(form.content());
