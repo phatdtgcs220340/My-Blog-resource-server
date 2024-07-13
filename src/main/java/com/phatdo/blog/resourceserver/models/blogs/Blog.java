@@ -1,6 +1,7 @@
 package com.phatdo.blog.resourceserver.models.blogs;
 
 import com.phatdo.blog.resourceserver.models.bloglikes.BlogLike;
+import com.phatdo.blog.resourceserver.models.images.Image;
 import com.phatdo.blog.resourceserver.models.replies.Reply;
 import com.phatdo.blog.resourceserver.models.users.User;
 import jakarta.persistence.*;
@@ -46,6 +47,9 @@ public class Blog {
 
         @OneToMany(mappedBy = "blog", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
         private final Set<Reply> replies = new HashSet<>();
+
+        @OneToMany(mappedBy = "blog", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+        private final Set<Image> images = new HashSet<>();
 
         @Override
         public int hashCode() {

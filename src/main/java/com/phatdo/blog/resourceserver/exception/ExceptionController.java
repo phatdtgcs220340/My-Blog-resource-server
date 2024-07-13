@@ -1,5 +1,6 @@
 package com.phatdo.blog.resourceserver.exception;
 
+import com.phatdo.blog.resourceserver.dto.responses.ErrorDTO;
 import com.phatdo.blog.resourceserver.dto.responses.TypeDTO;
 import com.phatdo.blog.resourceserver.mappers.DTOMapperE;
 import com.phatdo.blog.resourceserver.mappers.DTOMapperFactory;
@@ -40,5 +41,10 @@ public class ExceptionController {
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<TypeDTO> customExceptionHandler(CustomException exception) {
         return new ResponseEntity<>(mapperFactory.getMapper(DTOMapperE.ERROR).toDTO(exception), exception.getStatus());
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<TypeDTO> exceptionHandler(Exception exception) {
+        return ResponseEntity.badRequest().body(new ErrorDTO(exception.getMessage()));
     }
 }
