@@ -18,5 +18,12 @@ spring:
     include:
       - keystore
       - oauth2
+      - google-drive
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 50MB
+      max-request-size: 50MB
+
 server:
   port: 9090
