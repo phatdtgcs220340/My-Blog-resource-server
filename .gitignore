@@ -39,3 +39,7 @@ out/
 /src/main/resources/keystore.yml
 /src/main/resources/application-keystore.yml
 /src/main/resources/application-oauth2.yml
+
+### google credentials
+/google-credentials.json
+/src/main/resources/application-google-drive.yml
