@@ -8,8 +8,10 @@ import com.phatdo.blog.resourceserver.exception.CustomException;
 import com.phatdo.blog.resourceserver.mappers.DTOMapperE;
 import com.phatdo.blog.resourceserver.mappers.DTOMapperFactory;
 import com.phatdo.blog.resourceserver.models.blogs.Blog;
+import com.phatdo.blog.resourceserver.models.images.Image;
 import com.phatdo.blog.resourceserver.services.BlogService;
 
+import com.phatdo.blog.resourceserver.services.ImageUploadService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,21 +20,28 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+
 @RestController
 @RequestMapping("/api/v1/blog")
 public class BlogController {
     private final BlogService blogService;
     private final DTOMapperFactory mapperFactory;
+    private final ImageUploadService imageUploadService;
 
     @Autowired
-    public BlogController(BlogService blogService, DTOMapperFactory mapperFactory) {
+    public BlogController(BlogService blogService, DTOMapperFactory mapperFactory, ImageUploadService imageUploadService) {
         this.blogService = blogService;
         this.mapperFactory = mapperFactory;
+        this.imageUploadService = imageUploadService;
     }
 
-    @PostMapping
-    public ResponseEntity<TypeDTO> createBlog(@RequestBody @Valid CreateBlogDTO form) {
-        Blog blog = blogService.saveBlog(form.title(), form.content(), form.type(), UserContext.getUser());
+    @PostMapping(consumes = "multipart/form-data")
+    public ResponseEntity<TypeDTO> createBlog(@ModelAttribute @Valid CreateBlogDTO form) throws Exception {
+        Blog blog = blogService.saveBlog(form, UserContext.getUser());
+        CompletableFuture<List<Image>> future = imageUploadService.upload(blog, form.files());
+        blog.getImages().addAll(future.join());
         return ResponseEntity.ok(mapperFactory.getMapper(DTOMapperE.BLOG).toDTO(blog));
     }
 
