@@ -18,10 +18,6 @@ public class PartialBlogMapper implements DTOMapper<Blog> {
                 entity.getTitle(),
                 entity.getBlogType().toString(),
                 modifiedDateStr,
-                entity.getUser().getId(),
-                entity.getUser().getFullName(),
-                entity.getLikes().size(),
-                entity.getReplies().size(),
                 entity.getImages().stream().map(Image::getUrl).toList());
     }
 }

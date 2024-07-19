@@ -45,6 +45,6 @@ public class ExceptionController {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<TypeDTO> exceptionHandler(Exception exception) {
-        return ResponseEntity.badRequest().body(new ErrorDTO(exception.getMessage()));
+        return ResponseEntity.internalServerError().body(new ErrorDTO(exception.getMessage()));
     }
 }
