@@ -9,7 +9,9 @@ public enum CustomError {
     REPLY_NOT_FOUND("Cannot find reply", HttpStatus.NOT_FOUND),
     INVALID_FORM("Invalid form", HttpStatus.BAD_REQUEST),
     ACCESS_DENIED("Access denied", HttpStatus.FORBIDDEN),
-    INVALID_FILE_CONTENT_TYPE("Invalid content type", HttpStatus.BAD_REQUEST);
+    INVALID_FILE_CONTENT_TYPE("Invalid content type", HttpStatus.BAD_REQUEST),
+    DUPLICATED_LIKE("Duplicated like", HttpStatus.CONFLICT),
+    LIKE_NOT_FOUND("Like not found", HttpStatus.NOT_FOUND),;
 
     private final String message;
     private final HttpStatus status;
