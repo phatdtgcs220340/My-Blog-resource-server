@@ -64,10 +64,7 @@ public class BlogController {
     @PatchMapping("/{id}")
     public ResponseEntity<TypeDTO> updateBlog(@RequestBody @Valid UpdateBlogDTO form,
                                               @PathVariable long id) throws CustomException {
-        Blog blog = blogService.updateBlog(
-                id,
-                form.title(),
-                form.content());
+        Blog blog = blogService.updateBlog(id, form);
         return ResponseEntity.ok(mapperFactory.getMapper(DTOMapperE.BLOG).toDTO(blog));
     }
 

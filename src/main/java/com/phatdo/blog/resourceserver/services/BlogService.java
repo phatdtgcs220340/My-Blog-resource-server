@@ -1,6 +1,7 @@
 package com.phatdo.blog.resourceserver.services;
 
 import com.phatdo.blog.resourceserver.dto.requests.CreateBlogDTO;
+import com.phatdo.blog.resourceserver.dto.requests.UpdateBlogDTO;
 import com.phatdo.blog.resourceserver.exception.CustomError;
 import com.phatdo.blog.resourceserver.exception.CustomException;
 import com.phatdo.blog.resourceserver.models.blogs.Blog;
@@ -62,22 +63,24 @@ public class BlogService {
     /**
      * Update a blog
      * @param id : id of a blog
-     * @param title : new title
-     * @param content : new content
+     * @param dto : update dto
      * @return : An updated blog
      * @throws CustomException : will be thrown if the blog isn't existed
      */
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public Blog updateBlog(Long id, String title, String content) throws CustomException {
-           return blogRepository.findById(id)
-                   .map(blog -> {
-                       if (!title.isEmpty())
-                           blog.setTitle(title);
-                       if (!content.isEmpty())
-                           blog.setContent(content);
-                       return blogRepository.save(blog);
-           })
-                   .orElseThrow(() -> new CustomException(CustomError.BLOG_NOT_FOUND));
+    public Blog updateBlog(Long id,UpdateBlogDTO dto) throws CustomException {
+        Optional<Blog> optBlog = blogRepository.findById(id);
+        if (optBlog.isPresent()) {
+            Blog blog = optBlog.get();
+            if (!dto.title().isEmpty())
+                blog.setTitle(dto.title());
+            if (!dto.content().isEmpty())
+                blog.setContent(dto.content());
+            return blogRepository.save(blog);
+        }
+        else
+            throw new CustomException(CustomError.BLOG_NOT_FOUND);
+
     }
 
     /**
