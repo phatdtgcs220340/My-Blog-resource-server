@@ -16,6 +16,7 @@ import software.amazon.awssdk.core.sync.RequestBody;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -73,6 +74,7 @@ public class S3Service {
     }
 
     private String getFileUrl(String key) {
-        return String.format("%s/%s", bucketUrl, key).replace(' ', '+');
+
+        return String.format("%s/%s_%s", bucketUrl, key, Instant.now().toString()).replace(' ', '+');
     }
 }
