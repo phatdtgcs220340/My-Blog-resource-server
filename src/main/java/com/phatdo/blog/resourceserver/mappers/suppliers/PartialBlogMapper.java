@@ -16,7 +16,7 @@ public class PartialBlogMapper implements DTOMapper<Blog> {
         return new PartialBlogDTO(
                 entity.getId(),
                 entity.getTitle(),
-                entity.getBlogType().toString(),
+                entity.getBlogType().getName(),
                 modifiedDateStr,
                 entity.getImages().stream().map(Image::getUrl).toList());
     }

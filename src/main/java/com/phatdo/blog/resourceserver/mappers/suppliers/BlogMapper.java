@@ -17,7 +17,7 @@ public class BlogMapper implements DTOMapper<Blog> {
                 entity.getId(),
                 entity.getTitle(),
                 entity.getContent(),
-                entity.getBlogType().toString(),
+                entity.getBlogType().getName(),
                 modifiedDateStr,
                 entity.getUser().getId(),
                 entity.getUser().getFullName(),
