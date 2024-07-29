@@ -58,6 +58,7 @@ public class ReplyService {
             user.getReplies().remove(reply);
             replyRepository.delete(reply);
         }
-        else throw new CustomException(CustomError.REPLY_NOT_FOUND);
+        else
+            throw new CustomException(CustomError.REPLY_NOT_FOUND);
     }
 }
