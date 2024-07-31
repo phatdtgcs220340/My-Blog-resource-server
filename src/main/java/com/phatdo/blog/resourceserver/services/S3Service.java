@@ -53,7 +53,6 @@ public class S3Service {
     public CompletableFuture<Image> uploadFile(MultipartFile file, Blog blog) throws CustomException {
         if (acceptedContentTypes.contains(file.getContentType())) {
             String key = file.getOriginalFilename();
-
             try (InputStream inputStream = file.getInputStream()) {
                 s3Client.putObject(
                         PutObjectRequest.builder()
@@ -74,7 +73,6 @@ public class S3Service {
     }
 
     private String getFileUrl(String key) {
-
-        return String.format("%s/%s_%s", bucketUrl, key, Instant.now().toString()).replace(' ', '+');
+        return String.format("%s/%s", bucketUrl, key).replace(' ', '+');
     }
 }
