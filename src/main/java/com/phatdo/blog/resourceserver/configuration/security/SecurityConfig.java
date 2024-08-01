@@ -1,7 +1,5 @@
 package com.phatdo.blog.resourceserver.configuration.security;
 
-import com.phatdo.blog.resourceserver.configuration.jwt.JwtAuthenticationConverter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,12 +19,6 @@ public class SecurityConfig {
     private String keySetUri;
     @Value("${oauth2-client.domain}")
     private String clientDomain;
-    private final JwtAuthenticationConverter converter;
-
-    @Autowired
-    public SecurityConfig(JwtAuthenticationConverter converter) {
-        this.converter = converter;
-    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -39,8 +31,7 @@ public class SecurityConfig {
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(c -> c
                         .jwt(j -> j
-                                .jwkSetUri(keySetUri)
-                                .jwtAuthenticationConverter(converter)))
+                                .jwkSetUri(keySetUri)))
                 .sessionManagement(c -> c
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         return http.build();
