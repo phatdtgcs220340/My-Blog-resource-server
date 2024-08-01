@@ -33,7 +33,7 @@ public class User {
     @Column(unique = true, nullable = false)
     private final String username;
 
-    private final List<UserRole> roles = new ArrayList<>();
+    private String avatarUrl;
 
     private final Timestamp participatedDate = Timestamp.from(Instant.now());
 
