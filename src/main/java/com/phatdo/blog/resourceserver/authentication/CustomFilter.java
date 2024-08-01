@@ -6,6 +6,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,17 +25,13 @@ public class CustomFilter extends OncePerRequestFilter {
         this.userService = userService;
     }
 
-    /***
-     * An event listener after log in with jwt token
-     */
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(@NonNull HttpServletRequest request,
+                                    @NonNull HttpServletResponse response,
+                                    @NonNull FilterChain filterChain) throws ServletException, IOException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication instanceof JwtAuthenticationToken jwtAuthentication) {
-            String fullName = jwtAuthentication.getTokenAttributes().get("fullName").toString();
-            User user = userService.processOAuth2Login(fullName, authentication.getName(), jwtAuthentication.getAuthorities());
+            User user = userService.loadUserBySubject(jwtAuthentication.getName());
             UserContext.setUser(user);
         }
         try {
