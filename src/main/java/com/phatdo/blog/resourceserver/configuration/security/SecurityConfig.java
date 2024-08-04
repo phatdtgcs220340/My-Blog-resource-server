@@ -1,5 +1,7 @@
 package com.phatdo.blog.resourceserver.configuration.security;
 
+import com.phatdo.blog.resourceserver.configuration.jwt.JwtConverter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,19 +21,26 @@ public class SecurityConfig {
     private String keySetUri;
     @Value("${oauth2-client.domain}")
     private String clientDomain;
+    private final JwtConverter converter;
+
+    @Autowired
+    public SecurityConfig(JwtConverter converter) {
+        this.converter = converter;
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(c -> c
-                        .requestMatchers(HttpMethod.GET,"/api/v1/user").permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/v1/blog", "/api/v1/blog/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/reply").permitAll()
-                        .requestMatchers(HttpMethod.GET,"/api/v1/swagger-ui/index.html").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/api/register").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/api/v1/swagger-ui/**").permitAll()
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(c -> c
                         .jwt(j -> j
-                                .jwkSetUri(keySetUri)))
+                                .jwkSetUri(keySetUri)
+                                .jwtAuthenticationConverter(converter)))
                 .sessionManagement(c -> c
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         return http.build();
