@@ -25,7 +25,7 @@ public class UserService {
     public void register(String token) throws ParseException {
         JWTClaimsSet claimsSet = jwtDecoderService.decode(token);
         String username = claimsSet.getSubject();
-        String fullName = claimsSet.getStringClaim("fullName");
+        String fullName = claimsSet.getStringClaim("name");
         String avatar = claimsSet.getStringClaim("picture");
         User user = new User(fullName, username);
         user.setAvatarUrl(avatar);
