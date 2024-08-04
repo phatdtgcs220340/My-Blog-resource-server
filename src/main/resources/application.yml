@@ -3,8 +3,8 @@ spring:
     name: resource-server
   datasource:
     url: jdbc:postgresql://localhost:25432/resource-server-db
-    username: phatdo
-    password: bimatnha
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: create
@@ -12,7 +12,7 @@ spring:
     oauth2:
       resource-server:
         jwt:
-          jwk-set-uri: http://127.0.0.1:9000/oauth2/jwks
+          jwk-set-uri: ${JWK_SET_URI}
   profiles:
     include:
       - keystore
