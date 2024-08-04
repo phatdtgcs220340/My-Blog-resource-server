@@ -35,6 +35,9 @@ public class User {
 
     private String avatarUrl;
 
+    @Enumerated(EnumType.STRING)
+    private final Set<UserRole> roles = new HashSet<>();
+
     private final Timestamp participatedDate = Timestamp.from(Instant.now());
 
     @OneToMany(mappedBy = "user",
