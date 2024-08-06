@@ -1,6 +1,8 @@
 package com.phatdo.blog.resourceserver.services;
 
 import com.nimbusds.jwt.JWTClaimsSet;
+import com.phatdo.blog.resourceserver.exception.CustomError;
+import com.phatdo.blog.resourceserver.exception.CustomException;
 import com.phatdo.blog.resourceserver.models.users.User;
 import com.phatdo.blog.resourceserver.models.users.UserRole;
 import com.phatdo.blog.resourceserver.repositories.UserRepository;
@@ -22,7 +24,7 @@ public class UserService {
         this.jwtDecoderService = jwtDecoderService;
     }
 
-    public void register(String token) throws ParseException {
+    public void register(String token) throws ParseException, CustomException {
         JWTClaimsSet claimsSet = jwtDecoderService.decode(token);
         String username = claimsSet.getSubject();
         String fullName = claimsSet.getStringClaim("name");
@@ -33,6 +35,8 @@ public class UserService {
                 .stream()
                 .map(UserRole::valueOf)
                 .collect(Collectors.toSet()));
+        if (userRepository.findByUsername(username).isPresent())
+            throw new CustomException(CustomError.USER_DUPLICATE);
         userRepository.save(user);
     }
 
