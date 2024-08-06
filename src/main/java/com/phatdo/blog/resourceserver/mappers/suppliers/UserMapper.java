@@ -15,10 +15,8 @@ public class UserMapper implements DTOMapper<User> {
                 entity.getId(),
                 entity.getFullName(),
                 entity.getUsername(),
-                entity.getRoles()
-                        .stream()
-                        .map(Enum::toString)
-                        .toList(),
+                entity.getAvatarUrl(),
+                entity.getRoles(),
                 modifiedDateStr);
     }
 }
