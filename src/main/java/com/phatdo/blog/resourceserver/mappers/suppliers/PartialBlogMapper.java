@@ -7,6 +7,7 @@ import com.phatdo.blog.resourceserver.models.blogs.Blog;
 import com.phatdo.blog.resourceserver.models.images.Image;
 
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 
 public class PartialBlogMapper implements DTOMapper<Blog> {
     @Override
@@ -18,6 +19,9 @@ public class PartialBlogMapper implements DTOMapper<Blog> {
                 entity.getTitle(),
                 entity.getBlogType().getName(),
                 modifiedDateStr,
-                entity.getImages().stream().map(Image::getUrl).toList());
+                entity.getImages().stream()
+                        .sorted(Comparator.comparing(Image::getCreatedAt))
+                        .map(Image::getUrl)
+                        .toList());
     }
 }

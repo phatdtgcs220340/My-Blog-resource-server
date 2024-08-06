@@ -16,10 +16,11 @@ import software.amazon.awssdk.core.sync.RequestBody;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -42,11 +43,15 @@ public class S3Service {
     }
 
     public CompletableFuture<List<Image>> upload(Blog blog, List<MultipartFile> files) throws CustomException {
-        List<CompletableFuture<Image>> futures = new ArrayList<>();
-        for (MultipartFile file : files)
-            futures.add(uploadFile(file, blog));
-        return CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]))
-                .thenApply(v -> futures.stream().map(CompletableFuture::join).toList());
+        ConcurrentHashMap<Integer, CompletableFuture<Image>> futureMap = new ConcurrentHashMap<>();
+        for (int i = 0; i < files.size(); i++)
+            futureMap.put(i, uploadFile(files.get(i), blog));
+
+        return CompletableFuture.allOf(futureMap.values().toArray(new CompletableFuture[0]))
+                .thenApply(v -> futureMap.entrySet().stream()
+                        .sorted(Map.Entry.comparingByKey())
+                        .map(entry -> entry.getValue().join())
+                        .collect(Collectors.toList()));
     }
 
     @Async
