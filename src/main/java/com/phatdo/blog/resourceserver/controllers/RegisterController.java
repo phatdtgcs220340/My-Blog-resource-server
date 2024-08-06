@@ -1,6 +1,7 @@
 package com.phatdo.blog.resourceserver.controllers;
 
 import com.phatdo.blog.resourceserver.dto.responses.TypeDTO;
+import com.phatdo.blog.resourceserver.exception.CustomException;
 import com.phatdo.blog.resourceserver.services.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class RegisterController {
     }
 
     @GetMapping
-    public ResponseEntity<TypeDTO> register(@RequestHeader("Id-Token") String token) throws ParseException {
+    public ResponseEntity<TypeDTO> register(@RequestHeader("Id-Token") String token) throws ParseException, CustomException {
         log.info("Token found: {}", token);
         userService.register(token);
         return ResponseEntity.ok().build();
