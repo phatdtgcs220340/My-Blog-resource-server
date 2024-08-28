@@ -7,3 +7,9 @@ services:
       - 'POSTGRES_USER=${POSTGRES_USER}'
     ports:
       - '25432:5432'
+  redis:
+    image: redis:latest
+    ports:
+      - '26379:6379'
+    env_file:
+      - .env
