@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.*;
@@ -22,7 +23,7 @@ import java.util.*;
 @Table(name = "\"user\"")
 @NoArgsConstructor(access = AccessLevel.PUBLIC, force = true)
 @RequiredArgsConstructor
-public class User {
+public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(unique = true, nullable = false, name = "user_id")
@@ -70,6 +71,6 @@ public class User {
     }
     @Override
     public String toString() {
-        return String.format("Full name: %s%nUsername: %s", fullName, username);
+        return String.format("{ id: %d, fullName: %s, username: %s }", id, fullName, username);
     }
 }
