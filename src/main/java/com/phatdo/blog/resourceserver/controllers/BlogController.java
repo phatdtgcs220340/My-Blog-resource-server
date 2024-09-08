@@ -72,4 +72,13 @@ public class BlogController {
         blogService.deleteBlog(id, UserContext.getUser());
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<TypeDTO>> findBySearchTitle(@RequestParam(name = "title") String title) {
+        return ResponseEntity.ok(blogService.findBySearchTitle(title).stream()
+                .map(b -> mapperFactory
+                        .getMapper(DTOMapperE.SEARCH_BLOG)
+                        .toDTO(b))
+                .toList());
+    }
 }

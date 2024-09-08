@@ -8,11 +8,13 @@ import com.phatdo.blog.resourceserver.models.blogs.Blog;
 import com.phatdo.blog.resourceserver.models.users.User;
 import com.phatdo.blog.resourceserver.repositories.BlogRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -85,6 +87,7 @@ public class BlogService {
 
     /**
      * Delete a blog and remove it from user's blog list
+     *
      * @param id : expected blog to be deleted
      * @throws CustomException : will be thrown if it couldn't find blog
      */
@@ -97,5 +100,9 @@ public class BlogService {
         }
         else
             throw new CustomException(CustomError.BLOG_NOT_FOUND);
+    }
+
+    public List<Blog> findBySearchTitle(String title) {
+        return blogRepository.findByTitleContaining(title, PageRequest.of(0, 5));
     }
 }

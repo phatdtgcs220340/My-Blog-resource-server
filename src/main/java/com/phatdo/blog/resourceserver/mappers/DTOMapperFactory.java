@@ -12,7 +12,8 @@ public class DTOMapperFactory {
             DTOMapperE.BLOG, new BlogMapper(),
             DTOMapperE.REPLY, new ReplyMapper(),
             DTOMapperE.PARTIAL_BLOG, new PartialBlogMapper(),
-            DTOMapperE.ERROR, new ErrorMapper()
+            DTOMapperE.ERROR, new ErrorMapper(),
+            DTOMapperE.SEARCH_BLOG, new SearchBlogMapper()
     );
 
     @SuppressWarnings("unchecked")

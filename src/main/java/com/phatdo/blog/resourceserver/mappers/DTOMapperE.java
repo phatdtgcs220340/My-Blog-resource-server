@@ -5,5 +5,6 @@ public enum DTOMapperE {
     USER,
     REPLY,
     PARTIAL_BLOG,
-    ERROR
+    ERROR,
+    SEARCH_BLOG
 }
