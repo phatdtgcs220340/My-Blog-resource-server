@@ -7,8 +7,6 @@ import com.phatdo.blog.resourceserver.models.users.User;
 import com.phatdo.blog.resourceserver.models.users.UserRole;
 import com.phatdo.blog.resourceserver.repositories.BlogRepository;
 import com.phatdo.blog.resourceserver.repositories.ReplyRepository;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 public enum CustomError {
     BLOG_NOT_FOUND("Cannot find this blog", HttpStatus.NOT_FOUND),
     REPLY_NOT_FOUND("Cannot find reply", HttpStatus.NOT_FOUND),
-    INVALID_FORM("Invalid form", HttpStatus.BAD_REQUEST),
     ACCESS_DENIED("Access denied", HttpStatus.FORBIDDEN),
     INVALID_FILE_CONTENT_TYPE("Invalid content type", HttpStatus.BAD_REQUEST),
     DUPLICATED_LIKE("Duplicated like", HttpStatus.CONFLICT),

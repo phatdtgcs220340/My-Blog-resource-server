@@ -6,6 +6,7 @@ public record ReplyDTO(
         String dateAudit,
         long userId,
         String username,
+        String avatarUrl,
         int totalLikes
 ) implements TypeDTO {
 }

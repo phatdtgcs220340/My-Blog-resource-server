@@ -18,6 +18,7 @@ public class ReplyMapper implements DTOMapper<Reply> {
                 modifiedDateStr,
                 entity.getUser().getId(),
                 entity.getUser().getFullName(),
+                entity.getUser().getAvatarUrl(),
                 entity.getLikes().size()
         );
     }
