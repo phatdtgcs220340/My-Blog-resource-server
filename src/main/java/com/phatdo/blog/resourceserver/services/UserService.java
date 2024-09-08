@@ -54,9 +54,13 @@ public class UserService {
         }
         else
             return userRepository.findByUsername(username).map(u -> {
-                log.info("Save user to cache... {}", u);
-                redisTemplate.opsForValue().set(key, u, 15, TimeUnit.MINUTES);
-                return u;
+                User cachedUser = new User(u.getFullName(), username);
+                cachedUser.getRoles().addAll(u.getRoles());
+                cachedUser.setId(u.getId());
+                cachedUser.setAvatarUrl(u.getAvatarUrl());
+                log.info("Save user to cache... {}", cachedUser);
+                redisTemplate.opsForValue().set(key, cachedUser, 15, TimeUnit.MINUTES);
+                return cachedUser;
             }).orElseThrow(() -> new UsernameNotFoundException("Username not found"));
     }
 }
