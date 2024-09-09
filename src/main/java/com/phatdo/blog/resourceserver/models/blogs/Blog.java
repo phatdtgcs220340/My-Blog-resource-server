@@ -65,6 +65,6 @@ public class Blog {
 
         @Override
         public String toString() {
-                return String.format("{ title: %s, content: %s, tags: %s }", title, content, tags.toString());
+                return String.format("{ title: %s, content: %s, tags: %s }", title, content, tags);
         }
 }
