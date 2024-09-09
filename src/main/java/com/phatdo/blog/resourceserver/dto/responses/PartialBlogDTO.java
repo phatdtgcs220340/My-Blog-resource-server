@@ -5,7 +5,7 @@ import java.util.List;
 public record PartialBlogDTO(
         long id,
         String title,
-        String type,
+        List<String> tags,
         String dateAudit,
         List<String> images
 ) implements TypeDTO{

@@ -3,6 +3,7 @@ package com.phatdo.blog.resourceserver.models.blogs;
 import com.phatdo.blog.resourceserver.models.bloglikes.BlogLike;
 import com.phatdo.blog.resourceserver.models.images.Image;
 import com.phatdo.blog.resourceserver.models.replies.Reply;
+import com.phatdo.blog.resourceserver.models.tags.Tag;
 import com.phatdo.blog.resourceserver.models.users.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -32,7 +33,13 @@ public class Blog {
         @Column(columnDefinition = "TEXT")
         private String content;
 
-        private final BlogType blogType;
+        @ManyToMany
+        @JoinTable(
+                name = "blog_tag",
+                joinColumns = @JoinColumn(name = "blog_id"),
+                inverseJoinColumns = @JoinColumn(name = "tag_id")
+        )
+        private final Set<Tag> tags = new HashSet<>();
 
         private final Timestamp createdDate = Timestamp.from(Instant.now());
 
@@ -58,6 +65,6 @@ public class Blog {
 
         @Override
         public String toString() {
-                return String.format("Title: %s%nContent: %s%nType: %s", title, content, blogType);
+                return String.format("{ title: %s, content: %s, tags: %s }", title, content, tags.toString());
         }
 }
