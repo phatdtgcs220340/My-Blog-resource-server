@@ -13,7 +13,7 @@ public class DTOMapperFactory {
             DTOMapperE.REPLY, new ReplyMapper(),
             DTOMapperE.PARTIAL_BLOG, new PartialBlogMapper(),
             DTOMapperE.ERROR, new ErrorMapper(),
-            DTOMapperE.SEARCH_BLOG, new SearchBlogMapper()
+            DTOMapperE.TAG, new TagMapper()
     );
 
     @SuppressWarnings("unchecked")

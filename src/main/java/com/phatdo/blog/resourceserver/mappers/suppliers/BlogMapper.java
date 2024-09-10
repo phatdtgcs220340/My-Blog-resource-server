@@ -5,6 +5,7 @@ import com.phatdo.blog.resourceserver.dto.responses.FullBlogDTO;
 import com.phatdo.blog.resourceserver.mappers.DTOMapper;
 import com.phatdo.blog.resourceserver.models.blogs.Blog;
 import com.phatdo.blog.resourceserver.models.images.Image;
+import com.phatdo.blog.resourceserver.models.tags.Tag;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
@@ -18,7 +19,7 @@ public class BlogMapper implements DTOMapper<Blog> {
                 entity.getId(),
                 entity.getTitle(),
                 entity.getContent(),
-                entity.getBlogType().getName(),
+                entity.getTags().stream().map(Tag::getName).toList(),
                 modifiedDateStr,
                 entity.getUser().getId(),
                 entity.getUser().getFullName(),

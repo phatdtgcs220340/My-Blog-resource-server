@@ -7,7 +7,7 @@ public record FullBlogDTO(
         long id,
         String title,
         String content,
-        String type,
+        List<String> tags,
         String dateAudit,
         long userId,
         String fullName,
