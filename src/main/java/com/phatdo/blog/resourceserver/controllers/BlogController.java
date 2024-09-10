@@ -1,6 +1,7 @@
 package com.phatdo.blog.resourceserver.controllers;
 
 import com.phatdo.blog.resourceserver.authentication.UserContext;
+import com.phatdo.blog.resourceserver.dto.requests.BlogFilter;
 import com.phatdo.blog.resourceserver.dto.responses.TypeDTO;
 import com.phatdo.blog.resourceserver.dto.requests.CreateBlogDTO;
 import com.phatdo.blog.resourceserver.dto.requests.UpdateBlogDTO;
@@ -55,9 +56,10 @@ public class BlogController {
 
     @GetMapping
     public ResponseEntity<Page<TypeDTO>> getBlogs(@RequestParam(defaultValue = "0") int page,
-                                                  @RequestParam(defaultValue = "5") int size) {
+                                                  @RequestParam(defaultValue = "5") int size,
+                                                  @RequestBody BlogFilter filter) {
         Pageable pageable = PageRequest.of(page, size);
-        return ResponseEntity.ok(blogService.getAllBlogs(pageable).map(mapperFactory.getMapper(DTOMapperE.PARTIAL_BLOG)::toDTO));
+        return ResponseEntity.ok(blogService.getAllBlogs(filter, pageable).map(mapperFactory.getMapper(DTOMapperE.PARTIAL_BLOG)::toDTO));
     }
 
     @PatchMapping("/{id}")
@@ -71,14 +73,5 @@ public class BlogController {
     public ResponseEntity<TypeDTO> deleteBlog(@PathVariable long id) throws CustomException {
         blogService.deleteBlog(id, UserContext.getUser());
         return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping("/search")
-    public ResponseEntity<List<TypeDTO>> findBySearchTitle(@RequestParam(name = "title") String title) {
-        return ResponseEntity.ok(blogService.findBySearchTitle(title).stream()
-                .map(b -> mapperFactory
-                        .getMapper(DTOMapperE.SEARCH_BLOG)
-                        .toDTO(b))
-                .toList());
     }
 }
