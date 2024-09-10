@@ -2,6 +2,7 @@ package com.phatdo.blog.resourceserver.models.blogs;
 
 import lombok.Getter;
 
+@Deprecated
 @Getter
 public enum BlogType {
     THANH_HUYEN("Thanh Huyen"),
