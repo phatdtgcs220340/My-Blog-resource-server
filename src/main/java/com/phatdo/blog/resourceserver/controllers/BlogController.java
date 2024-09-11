@@ -54,7 +54,7 @@ public class BlogController {
         return ResponseEntity.ok(mapperFactory.getMapper(DTOMapperE.BLOG).toDTO(blog));
     }
 
-    @GetMapping
+    @PostMapping("/list")
     public ResponseEntity<Page<TypeDTO>> getBlogs(@RequestParam(defaultValue = "0") int page,
                                                   @RequestParam(defaultValue = "5") int size,
                                                   @RequestBody BlogFilter filter) {

@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
@@ -34,15 +35,18 @@ public class SecurityConfig {
                 .authorizeHttpRequests(c -> c
                         .requestMatchers(HttpMethod.GET,"/api/v1/blog", "/api/v1/blog/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/reply").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/tag", "/api/v1/tag/**").permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/register").permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/v1/swagger-ui/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "api/v1/blog/list").permitAll()
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(c -> c
                         .jwt(j -> j
                                 .jwkSetUri(keySetUri)
                                 .jwtAuthenticationConverter(converter)))
                 .sessionManagement(c -> c
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .csrf(AbstractHttpConfigurer::disable);
         return http.build();
     }
 
