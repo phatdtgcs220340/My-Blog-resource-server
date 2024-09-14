@@ -18,8 +18,8 @@ import static com.phatdo.blog.resourceserver.utils.commons.path.CommonApi.API_TA
 @RestController
 @RequestMapping(path = API_TAG)
 public class TagController {
-    private TagService tagService;
-    private DTOMapperFactory factory;
+    private final TagService tagService;
+    private final DTOMapperFactory factory;
 
     public TagController(TagService tagService, DTOMapperFactory factory) {
         this.tagService = tagService;
