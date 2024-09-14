@@ -12,10 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.phatdo.blog.resourceserver.utils.commons.path.CommonApi.API_TAG;
 
 
 @RestController
-@RequestMapping(path = "/api/v1/tag")
+@RequestMapping(path = API_TAG)
 public class TagController {
     private TagService tagService;
     private DTOMapperFactory factory;
