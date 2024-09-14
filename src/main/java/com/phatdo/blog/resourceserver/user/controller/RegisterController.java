@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.text.ParseException;
 
+import static com.phatdo.blog.resourceserver.utils.commons.path.CommonApi.API_REGISTER;
+
 @Slf4j
 @RestController
-@RequestMapping("/api/register")
+@RequestMapping(API_REGISTER)
 public class RegisterController {
     private final UserService userService;
 

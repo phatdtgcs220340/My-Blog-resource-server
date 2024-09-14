@@ -24,8 +24,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+import static com.phatdo.blog.resourceserver.utils.commons.path.CommonApi.API_BLOG;
+
 @RestController
-@RequestMapping("/api/v1/blog")
+@RequestMapping(API_BLOG)
 public class BlogController {
     private final BlogService blogService;
     private final DTOMapperFactory mapperFactory;

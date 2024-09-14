@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.phatdo.blog.resourceserver.utils.commons.path.CommonApi.API_POST_LIKE;
+
 @RestController
-@RequestMapping("/api/v1/post-like")
+@RequestMapping(API_POST_LIKE)
 public class PostLikeController {
     private final BlogLikeService blogLikeService;
 

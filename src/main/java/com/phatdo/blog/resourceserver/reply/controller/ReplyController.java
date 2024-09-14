@@ -18,8 +18,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.phatdo.blog.resourceserver.utils.commons.path.CommonApi.API_REPLY;
+
 @RestController
-@RequestMapping("/api/v1/reply")
+@RequestMapping(API_REPLY)
 public class ReplyController {
     private final ReplyService replyService;
     private final DTOMapperFactory mapperFactory;

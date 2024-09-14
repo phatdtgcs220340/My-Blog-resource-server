@@ -8,8 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import static com.phatdo.blog.resourceserver.utils.commons.path.CommonApi.API_USER;
+
 @RestController
-@RequestMapping(path = "/api/v1/user", produces = "application/json")
+@RequestMapping(path = API_USER, produces = "application/json")
 public class UserController {
     private final DTOMapperFactory mapperFactory;
 

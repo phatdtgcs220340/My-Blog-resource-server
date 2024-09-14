@@ -15,6 +15,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import static com.phatdo.blog.resourceserver.utils.commons.path.CommonApi.*;
+
 @Configuration
 @EnableMethodSecurity
 public class SecurityConfig {
@@ -33,12 +35,12 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(c -> c
-                        .requestMatchers(HttpMethod.GET,"/api/v1/blog", "/api/v1/blog/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/reply").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/tag", "/api/v1/tag/**").permitAll()
-                        .requestMatchers(HttpMethod.GET,"/api/register").permitAll()
-                        .requestMatchers(HttpMethod.GET,"/api/v1/swagger-ui/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "api/v1/blog/list").permitAll()
+                        .requestMatchers(HttpMethod.GET, API_BLOG, String.format("%s/**",API_BLOG)).permitAll()
+                        .requestMatchers(HttpMethod.GET, API_REPLY).permitAll()
+                        .requestMatchers(HttpMethod.GET, API_TAG, "/api/v1/tag/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, API_REGISTER).permitAll()
+                        .requestMatchers(HttpMethod.GET, String.format("%s/swagger-ui/**",API_VERSION_1)).permitAll()
+                        .requestMatchers(HttpMethod.POST, String.format("%s/list",API_BLOG)).permitAll()
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(c -> c
                         .jwt(j -> j
