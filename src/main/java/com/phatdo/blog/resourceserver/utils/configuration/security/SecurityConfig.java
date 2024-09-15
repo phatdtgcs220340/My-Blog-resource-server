@@ -37,6 +37,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(c -> c
                         .requestMatchers(HttpMethod.GET, API_BLOG, String.format("%s/**",API_BLOG)).permitAll()
                         .requestMatchers(HttpMethod.GET, API_REPLY).permitAll()
+                        .requestMatchers(HttpMethod.GET, API_REGISTER).permitAll()
                         .requestMatchers(HttpMethod.GET, API_TAG, "/api/v1/tag/**").permitAll()
                         .requestMatchers(HttpMethod.GET, String.format("%s/swagger-ui/**",API_VERSION_1)).permitAll()
                         .requestMatchers(HttpMethod.POST, String.format("%s/list",API_BLOG)).permitAll()

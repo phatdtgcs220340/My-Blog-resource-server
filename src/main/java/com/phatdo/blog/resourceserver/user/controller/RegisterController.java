@@ -23,7 +23,7 @@ public class RegisterController {
         this.userService = userService;
     }
 
-    @PostMapping
+    @GetMapping
     public ResponseEntity<TypeDTO> register(@RequestHeader("Id-Token") String token) throws ParseException, CustomException {
         log.info("Token found: {}", token);
         userService.register(token);
