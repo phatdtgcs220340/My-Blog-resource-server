@@ -9,10 +9,9 @@ import com.phatdo.blog.resourceserver.utils.commons.exception.CustomException;
 import com.phatdo.blog.resourceserver.utils.mappers.DTOMapperE;
 import com.phatdo.blog.resourceserver.utils.mappers.DTOMapperFactory;
 import com.phatdo.blog.resourceserver.blog.model.Blog;
-import com.phatdo.blog.resourceserver.image.model.Image;
 import com.phatdo.blog.resourceserver.blog.service.BlogService;
 
-import com.phatdo.blog.resourceserver.image.service.S3Service;
+import com.phatdo.blog.resourceserver.image.service.FileService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,9 +20,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-
 import static com.phatdo.blog.resourceserver.utils.commons.path.CommonApi.API_BLOG;
 
 @RestController
@@ -31,22 +27,19 @@ import static com.phatdo.blog.resourceserver.utils.commons.path.CommonApi.API_BL
 public class BlogController {
     private final BlogService blogService;
     private final DTOMapperFactory mapperFactory;
-    private final S3Service imageUploadService;
+    private final FileService fileService;
 
     @Autowired
-    public BlogController(BlogService blogService, DTOMapperFactory mapperFactory, S3Service imageUploadService) {
+    public BlogController(BlogService blogService, DTOMapperFactory mapperFactory, FileService fileService) {
         this.blogService = blogService;
         this.mapperFactory = mapperFactory;
-        this.imageUploadService = imageUploadService;
+        this.fileService = fileService;
     }
 
-    @PostMapping(consumes = "multipart/form-data")
-    public ResponseEntity<TypeDTO> createBlog(@ModelAttribute @Valid CreateBlogDTO form) throws Exception {
+    @PostMapping()
+    public ResponseEntity<TypeDTO> createBlog(@RequestBody @Valid CreateBlogDTO form){
         Blog blog = blogService.saveBlog(form, UserContext.getUser());
-        if (form.files() != null && !form.files().isEmpty()) {
-            CompletableFuture<List<Image>> future = imageUploadService.upload(blog, form.files());
-            blog.getImages().addAll(future.join());
-        }
+        blog.getImages().addAll(fileService.linkFileToBlog(form.files(), blog));
         return ResponseEntity.ok(mapperFactory.getMapper(DTOMapperE.BLOG).toDTO(blog));
     }
 
@@ -61,7 +54,8 @@ public class BlogController {
                                                   @RequestParam(defaultValue = "5") int size,
                                                   @RequestBody BlogFilter filter) {
         Pageable pageable = PageRequest.of(page, size);
-        return ResponseEntity.ok(blogService.getAllBlogs(filter, pageable).map(mapperFactory.getMapper(DTOMapperE.PARTIAL_BLOG)::toDTO));
+        return ResponseEntity.ok(blogService.getAllBlogs(filter, pageable)
+                .map(mapperFactory.getMapper(DTOMapperE.PARTIAL_BLOG)::toDTO));
     }
 
     @PatchMapping("/{id}")
