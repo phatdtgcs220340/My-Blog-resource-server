@@ -1,6 +1,5 @@
 package com.phatdo.blog.resourceserver.utils.mappers.suppliers;
 
-import com.phatdo.blog.resourceserver.utils.commons.dto.TypeDTO;
 import com.phatdo.blog.resourceserver.blog.dto.FullBlogDTO;
 import com.phatdo.blog.resourceserver.utils.mappers.DTOMapper;
 import com.phatdo.blog.resourceserver.blog.model.Blog;
@@ -10,9 +9,9 @@ import com.phatdo.blog.resourceserver.tag.model.Tag;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 
-public class BlogMapper implements DTOMapper<Blog> {
+public class BlogMapper implements DTOMapper<Blog, FullBlogDTO> {
     @Override
-    public TypeDTO toDTO(Blog entity) {
+    public FullBlogDTO toDTO(Blog entity) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy - HH:mm a");
         String modifiedDateStr = entity.getModifiedDate().toLocalDateTime().format(formatter);
         return new FullBlogDTO(
