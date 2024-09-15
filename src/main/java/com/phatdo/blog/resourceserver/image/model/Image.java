@@ -19,10 +19,14 @@ public class Image {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(unique = true, nullable = false, name = "image_id")
     private long id;
+
     private final String url;
+
     private final Timestamp createdAt = Timestamp.from(Instant.now());
 
+    private String description;
+
     @ManyToOne
-    @JoinColumn(nullable = false, name = "blog_id")
-    private final Blog blog;
+    @JoinColumn(nullable = true, name = "blog_id")
+    private Blog blog;
 }
