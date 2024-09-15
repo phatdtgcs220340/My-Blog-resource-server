@@ -8,6 +8,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
+import java.util.Locale;
 
 public class BlogSpecs {
     public static Specification<Blog> filterByName(String name) {
@@ -23,8 +24,15 @@ public class BlogSpecs {
         return (root, query, cb) -> {
             if (tags == null || tags.isEmpty())
                 return cb.conjunction();
+
+            List<String> convertedTags = tags.stream()
+                    .map(tag -> tag
+                            .trim()
+                            .replace(' ', '_')
+                            .toUpperCase(Locale.ROOT))
+                    .toList();
             Join<Blog, Tag> tagJoin = root.join("tags", JoinType.INNER);
-            return tagJoin.get("name").in(tags);
+            return tagJoin.get("name").in(convertedTags);
         };
     }
 

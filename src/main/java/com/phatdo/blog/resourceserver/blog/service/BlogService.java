@@ -19,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 @Slf4j
@@ -27,7 +28,8 @@ public class BlogService {
     private final BlogRepository blogRepository;
     private final TagRepository tagRepository;
 
-    public BlogService(BlogRepository blogRepository, TagRepository tagRepository) {
+    public BlogService(BlogRepository blogRepository,
+                       TagRepository tagRepository) {
         this.blogRepository = blogRepository;
         this.tagRepository = tagRepository;
     }
@@ -35,11 +37,20 @@ public class BlogService {
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public Blog saveBlog(CreateBlogDTO form, User user) {
         Blog blog = new Blog(user);
-        List<Tag> existedTag = tagRepository.findByListName(form.tags());
+        List<String> convertedTags = form.tags().stream()
+                .map(tag -> tag
+                        .trim()
+                        .replace(' ', '_')
+                        .toUpperCase(Locale.ROOT))
+                .toList();
+
+        List<Tag> existedTag = tagRepository.findByListName(convertedTags);
         List<String> existedTagString = existedTag.stream().map(Tag::getName).toList();
-        form.tags().stream()
+
+        convertedTags.stream()
                 .filter(t -> !existedTagString.contains(t))
                 .forEach(tag -> existedTag.add(tagRepository.save(new Tag(tag))));
+
         blog.getTags().addAll(existedTag);
         blog.setTitle(form.title());
         blog.setContent(form.content());

@@ -6,6 +6,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Locale;
+
 
 @Service
 public class TagService {
@@ -16,7 +18,10 @@ public class TagService {
     }
 
     public Page<Tag> findBySearchName(String name, Pageable pageable) {
-        return tagRepository.findByNameContaining(name, pageable);
+        String convertedName = name.trim()
+                .replace(' ', '_')
+                .toUpperCase(Locale.ROOT);
+        return tagRepository.findByNameContaining(convertedName, pageable);
     }
 
     public Page<Tag> findAll(Pageable pageable) {
