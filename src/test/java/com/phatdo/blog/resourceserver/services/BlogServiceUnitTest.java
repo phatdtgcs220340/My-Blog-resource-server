@@ -1,11 +1,11 @@
 package com.phatdo.blog.resourceserver.services;
 
-import com.phatdo.blog.resourceserver.dto.requests.UpdateBlogDTO;
-import com.phatdo.blog.resourceserver.models.blogs.BlogType;
-import com.phatdo.blog.resourceserver.exception.CustomException;
-import com.phatdo.blog.resourceserver.models.blogs.Blog;
-import com.phatdo.blog.resourceserver.models.users.User;
-import com.phatdo.blog.resourceserver.repositories.BlogRepository;
+import com.phatdo.blog.resourceserver.blog.model.Blog;
+import com.phatdo.blog.resourceserver.blog.repository.BlogRepository;
+import com.phatdo.blog.resourceserver.blog.request.UpdateBlogDTO;
+import com.phatdo.blog.resourceserver.blog.service.BlogService;
+import com.phatdo.blog.resourceserver.user.model.User;
+import com.phatdo.blog.resourceserver.utils.commons.exception.CustomException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -32,7 +32,7 @@ public class BlogServiceUnitTest {
     @Test
     @WithMockUser(username = "phatdo", roles = {"ADMIN"})
     public void testDeleteBlog() throws CustomException {
-        Blog blog = new Blog(BlogType.DAILY_BLOG, user);
+        Blog blog = new Blog(user);
         blog.setId(1);
         blog.setTitle("This is a test title");
         blog.setContent("This is a test content");
@@ -59,7 +59,7 @@ public class BlogServiceUnitTest {
     @Test
     @WithMockUser(username = "phatdo", roles = { "ADMIN" })
     public void testUpdateBlogShouldSuccess() throws CustomException {
-        Blog blog = new Blog(BlogType.DAILY_BLOG, user);
+        Blog blog = new Blog(user);
         blog.setId(1);
         blog.setTitle("This is a test title");
         blog.setContent("This is a test content");
@@ -76,7 +76,7 @@ public class BlogServiceUnitTest {
     @Test
     @WithMockUser(username = "phatdo")
     public void testUpdateBlogThrownBlogNotFoundException() {
-        Blog blog = new Blog(BlogType.DAILY_BLOG, user);
+        Blog blog = new Blog(user);
         blog.setId(1);
         blog.setTitle("This is a test title");
         blog.setContent("This is a test content");
@@ -84,5 +84,11 @@ public class BlogServiceUnitTest {
         UpdateBlogDTO dto = new UpdateBlogDTO("title", "This is a new test content");
         assertThrows(CustomException.class, () -> blogService.updateBlog(blog.getId(), dto));
         verify(blogRepository, never()).save(blog);
+    }
+
+    @Test
+    @WithMockUser(username = "phatdo", roles = { "ADMIN" })
+    public void testFindMatch() {
+
     }
 }
