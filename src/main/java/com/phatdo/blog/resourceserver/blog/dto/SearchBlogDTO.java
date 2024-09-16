@@ -2,6 +2,7 @@ package com.phatdo.blog.resourceserver.blog.dto;
 
 import com.phatdo.blog.resourceserver.utils.commons.dto.TypeDTO;
 
+@Deprecated
 public record SearchBlogDTO(
         String title,
         Long id
