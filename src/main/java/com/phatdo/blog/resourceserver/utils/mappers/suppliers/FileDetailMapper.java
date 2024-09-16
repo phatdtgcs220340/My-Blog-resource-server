@@ -7,6 +7,6 @@ import com.phatdo.blog.resourceserver.utils.mappers.DTOMapper;
 public class FileDetailMapper implements DTOMapper<Image, FileDetailDTO> {
     @Override
     public FileDetailDTO toDTO(Image entity) {
-        return new FileDetailDTO(entity.getId(), entity.getUrl());
+        return new FileDetailDTO(entity.getId(), entity.getUrl(), entity.getDescription());
     }
 }
