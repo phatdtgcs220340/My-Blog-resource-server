@@ -39,8 +39,8 @@ public class BlogController {
     @PostMapping()
     public ResponseEntity<TypeDTO> createBlog(@RequestBody @Valid CreateBlogDTO form){
         Blog blog = blogService.saveBlog(form, UserContext.getUser());
-        if (form.files() != null || !form.files().isEmpty())
-            blog.getImages().addAll(fileService.linkFileToBlog(form.files(), blog));
+        if (form.files() != null && !form.files().isEmpty())
+            blog.getImages().addAll(fileService.updateFileDetails(form.files(), blog));
         return ResponseEntity.ok(mapperFactory.getMapper(DTOMapperE.BLOG).toDTO(blog));
     }
 

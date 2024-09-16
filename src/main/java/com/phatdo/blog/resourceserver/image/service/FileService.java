@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.services.s3.S3Client;
@@ -45,6 +46,7 @@ public class FileService {
         this.imageRepository = imageRepository;
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public CompletableFuture<List<Image>> upload(List<MultipartFile> files) throws CustomException {
         ConcurrentHashMap<Integer, CompletableFuture<Image>> futureMap = new ConcurrentHashMap<>();
         for (int i = 0; i < files.size(); i++)
@@ -80,10 +82,18 @@ public class FileService {
         else throw new CustomException(CustomError.INVALID_FILE_CONTENT_TYPE);
     }
 
-    public List<Image> linkFileToBlog(List<FileDetail> fileDetails, Blog blog) {
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public List<Image> updateFileDetails(List<FileDetail> fileDetails, Blog blog) {
         return fileDetails.stream().map(file -> {
             Optional<Image> optImage = imageRepository.findById(file.id());
             return optImage.map(image -> {
+                if (image.getBlog() != null) {
+                    log.error("Invalid image found {}", image.getId());
+                    Image invalidImage = new Image(image.getUrl());
+                    invalidImage.setId(image.getId());
+                    invalidImage.setDescription("[ERROR] This image upload request has been declined");
+                    return invalidImage;
+                }
                 image.setBlog(blog);
                 if (!StringUtils.isEmpty(file.description()))
                     image.setDescription(file.description());
@@ -91,6 +101,7 @@ public class FileService {
             }).orElseThrow();
         }).toList();
     }
+
     private String getFileUrl(String key) {
         return String.format("%s/%s", bucketUrl, key).replace(' ', '+');
     }
