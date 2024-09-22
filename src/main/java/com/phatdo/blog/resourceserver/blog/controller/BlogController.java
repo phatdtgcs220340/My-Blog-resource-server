@@ -40,7 +40,9 @@ public class BlogController {
     public ResponseEntity<TypeDTO> createBlog(@RequestBody @Valid CreateBlogDTO form){
         Blog blog = blogService.saveBlog(form, UserContext.getUser());
         if (form.files() != null && !form.files().isEmpty())
-            blog.getImages().addAll(fileService.updateFileDetails(form.files(), blog));
+            blog.getImages().addAll(fileService.updateFileDetails(form.files(), blog).stream()
+                    .filter(i -> i.getDescription() != null && !i.getDescription().startsWith("[ERROR]"))
+                    .toList());
         return ResponseEntity.ok(mapperFactory.getMapper(DTOMapperE.BLOG).toDTO(blog));
     }
 

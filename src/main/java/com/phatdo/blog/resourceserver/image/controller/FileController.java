@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+import static com.phatdo.blog.resourceserver.utils.commons.exception.CustomError.INVALID_FILE_CONTENT_TYPE;
 import static com.phatdo.blog.resourceserver.utils.commons.path.CommonApi.API_IMAGE;
 
 /**
@@ -35,6 +36,9 @@ public class FileController {
 
     @PostMapping(value = "/upload_multiple", consumes = "multipart/form-data")
     public ResponseEntity<List<TypeDTO>> uploadFiles(@ModelAttribute List<MultipartFile> files) throws CustomException {
+        if (files == null || files.isEmpty()) {
+            throw new CustomException(INVALID_FILE_CONTENT_TYPE);
+        }
         return ResponseEntity.ok(imageService.upload(files).join().stream()
                 .map(mapperFactory.getMapper(DTOMapperE.FILE_DETAIL)::toDTO)
                 .toList());
