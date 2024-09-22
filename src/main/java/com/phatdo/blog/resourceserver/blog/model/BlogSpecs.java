@@ -14,7 +14,7 @@ public class BlogSpecs {
     public static Specification<Blog> filterByName(String name) {
         return (root, query, cb) -> {
             if (!StringUtils.isEmpty(name))
-                return cb.like(root.get("title"), "%" + name + "%");
+                return cb.like(cb.lower(root.get("title")), "%" + name.toLowerCase() + "%");
             else
                 return cb.conjunction();
         };
