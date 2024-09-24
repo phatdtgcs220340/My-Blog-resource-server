@@ -14,10 +14,15 @@ public class PartialBlogMapper implements DTOMapper<Blog, PartialBlogDTO> {
     public PartialBlogDTO toDTO(Blog entity) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy - HH:mm a");
         String modifiedDateStr = entity.getModifiedDate().toLocalDateTime().format(formatter);
+        String transformBlogContent = entity.getContent().length() <= 50 ? entity.getContent() : entity.getContent()
+                .subSequence(0, 50)
+                .toString()
+                .concat( "..."); // add subsequenc
         return new PartialBlogDTO(
                 entity.getId(),
                 entity.getTitle(),
                 entity.getTags().stream().map(Tag::getName).toList(),
+                transformBlogContent,
                 modifiedDateStr,
                 entity.getImages().stream()
                         .sorted(Comparator.comparing(Image::getCreatedAt))

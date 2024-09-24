@@ -8,6 +8,7 @@ public record PartialBlogDTO(
         long id,
         String title,
         List<String> tags,
+        String content,
         String dateAudit,
         List<String> images
 ) implements TypeDTO {
