@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.HashMap;
@@ -26,16 +25,17 @@ public class ExceptionController {
         this.mapperFactory = mapperFactory;
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException exception) {
+    public ResponseEntity<TypeDTO> handleValidationExceptions(MethodArgumentNotValidException exception) {
         Map<String, String> errors = new HashMap<>();
         exception.getBindingResult().getAllErrors().forEach((error) -> {
             String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
             errors.put(fieldName, errorMessage);
         });
-        return errors;
+        StringBuilder messageBuilder = new StringBuilder("Error: ");
+        errors.keySet().forEach(key -> messageBuilder.append(String.format("%s, ", errors.get(key))));
+        return new ResponseEntity<>(new ErrorDTO(messageBuilder.toString()), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(CustomException.class)
@@ -45,6 +45,7 @@ public class ExceptionController {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<TypeDTO> exceptionHandler(Exception exception) {
+        exception.printStackTrace();
         return ResponseEntity.internalServerError().body(new ErrorDTO(exception.getMessage()));
     }
 }
