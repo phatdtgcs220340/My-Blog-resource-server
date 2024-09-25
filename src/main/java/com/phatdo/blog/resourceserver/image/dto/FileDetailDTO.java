@@ -5,6 +5,7 @@ import com.phatdo.blog.resourceserver.utils.commons.dto.TypeDTO;
 public record FileDetailDTO(
         Long id,
         String fileLink,
+        String fileLinkResized,
         String description
 ) implements TypeDTO {
 }

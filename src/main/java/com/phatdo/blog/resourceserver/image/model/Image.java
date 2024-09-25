@@ -20,7 +20,8 @@ public class Image {
     @Column(unique = true, nullable = false, name = "image_id")
     private long id;
 
-    private final String url;
+    private final String originalImageUrl;
+    private String resizedImageUrl;
 
     private final Timestamp createdAt = Timestamp.from(Instant.now());
 

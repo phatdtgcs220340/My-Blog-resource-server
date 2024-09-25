@@ -26,7 +26,7 @@ public class BlogMapper implements DTOMapper<Blog, FullBlogDTO> {
                 entity.getReplies().size(),
                 entity.getImages().stream()
                         .sorted(Comparator.comparing(Image::getCreatedAt))
-                        .map(Image::getUrl)
+                        .map(Image::getResizedImageUrl)
                         .toList());
     }
 }
