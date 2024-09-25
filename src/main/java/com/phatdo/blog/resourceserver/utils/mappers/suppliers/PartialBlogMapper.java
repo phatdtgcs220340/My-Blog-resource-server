@@ -26,7 +26,7 @@ public class PartialBlogMapper implements DTOMapper<Blog, PartialBlogDTO> {
                 modifiedDateStr,
                 entity.getImages().stream()
                         .sorted(Comparator.comparing(Image::getCreatedAt))
-                        .map(Image::getUrl)
+                        .map(Image::getResizedImageUrl)
                         .toList());
     }
 }

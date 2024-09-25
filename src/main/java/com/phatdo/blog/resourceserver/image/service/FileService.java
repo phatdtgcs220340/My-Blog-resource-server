@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.services.s3.S3Client;
@@ -19,8 +20,11 @@ import software.amazon.awssdk.core.sync.RequestBody;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -35,19 +39,22 @@ public class FileService {
     private final String bucketName;
     private final String bucketUrl;
     private final ImageRepository imageRepository;
+    private final ResizeImageService resizeImageService;
 
     public FileService(S3Client s3Client,
                        ImageRepository imageRepository,
+                       ResizeImageService resizeImageService,
                        @Value("${aws.s3.bucketName}") String bucketName,
                        @Value("${aws.s3.bucketUrl}") String bucketUrl) {
         this.s3Client = s3Client;
         this.bucketName = bucketName;
         this.bucketUrl = bucketUrl;
         this.imageRepository = imageRepository;
+        this.resizeImageService = resizeImageService;
     }
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public CompletableFuture<List<Image>> upload(List<MultipartFile> files) throws CustomException {
+//    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public CompletableFuture<List<Image>> upload(List<MultipartFile> files) throws CustomException, IOException {
         ConcurrentHashMap<Integer, CompletableFuture<Image>> futureMap = new ConcurrentHashMap<>();
         for (int i = 0; i < files.size(); i++)
             futureMap.put(i, uploadFile(files.get(i)));
@@ -60,23 +67,41 @@ public class FileService {
     }
 
     @Async
-    public CompletableFuture<Image> uploadFile(MultipartFile file) throws CustomException {
+    public CompletableFuture<Image> uploadFile(MultipartFile file) throws CustomException, IOException {
+        String user = SecurityContextHolder.getContext().getAuthentication().getName();
+        String keyOriginal;
+        String keyResized;
+        String contentType = Objects.requireNonNull(file.getContentType()).replace("image/", "");
         if (acceptedContentTypes.contains(file.getContentType())) {
-            String key = file.getOriginalFilename();
+            // Upload original file
             try (InputStream inputStream = file.getInputStream()) {
+                keyOriginal = String.format("%s_%s.%s", file.getName(), Instant.now(), contentType);
+                log.info("User {} is trying to upload this file : {}", user, keyOriginal);
+
                 s3Client.putObject(
                         PutObjectRequest.builder()
                                 .bucket(bucketName)
-                                .key(key)
+                                .key(keyOriginal)
                                 .build(),
-                        RequestBody.fromInputStream(inputStream, file.getSize())
-                );
+                        RequestBody.fromInputStream(inputStream, file.getSize()));
             } catch (IOException e) {
                 throw new RuntimeException("Error uploading file to S3", e);
             }
 
+            byte[] resizedImage = resizeImageService.resize(file);
+            keyResized = String.format("%s_%s_small.%s", file.getName(), Instant.now(), contentType);
+            log.info("User {} is trying to upload this file : {}", user, keyResized);
+            s3Client.putObject(
+                    PutObjectRequest.builder()
+                            .bucket(bucketName)
+                            .key(keyResized)
+                            .build(),
+                    RequestBody.fromByteBuffer(ByteBuffer.wrap(resizedImage)));
+
+            Image image = new Image(getFileUrl(keyOriginal));
+            image.setResizedImageUrl(getFileUrl(keyResized));
             return CompletableFuture.completedFuture(imageRepository.save(
-                    new Image(getFileUrl(key))
+                    image
             ));
         }
         else throw new CustomException(CustomError.INVALID_FILE_CONTENT_TYPE);
@@ -89,7 +114,7 @@ public class FileService {
             return optImage.map(image -> {
                 if (image.getBlog() != null) {
                     log.error("Invalid image found {}", image.getId());
-                    Image invalidImage = new Image(image.getUrl());
+                    Image invalidImage = new Image(image.getOriginalImageUrl());
                     invalidImage.setId(image.getId());
                     invalidImage.setDescription("[ERROR] This image upload request has been declined");
                     return invalidImage;
