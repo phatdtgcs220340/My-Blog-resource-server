@@ -29,13 +29,11 @@ import static com.phatdo.blog.resourceserver.utils.commons.path.CommonApi.API_IM
 public class FileController {
     private final FileService fileService;
     private final DTOMapperFactory mapperFactory;
-    private final ResizeImageService resizeService;
 
     @Autowired
-    public FileController(FileService fileService, DTOMapperFactory mapperFactory, ResizeImageService resizeService) {
+    public FileController(FileService fileService, DTOMapperFactory mapperFactory) {
         this.fileService = fileService;
         this.mapperFactory = mapperFactory;
-        this.resizeService = resizeService;
     }
 
     @PostMapping(value = "/upload_multiple", consumes = "multipart/form-data")

@@ -53,7 +53,7 @@ public class FileService {
         this.resizeImageService = resizeImageService;
     }
 
-//    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public CompletableFuture<List<Image>> upload(List<MultipartFile> files) throws CustomException, IOException {
         ConcurrentHashMap<Integer, CompletableFuture<Image>> futureMap = new ConcurrentHashMap<>();
         for (int i = 0; i < files.size(); i++)
@@ -71,11 +71,25 @@ public class FileService {
         String user = SecurityContextHolder.getContext().getAuthentication().getName();
         String keyOriginal;
         String keyResized;
+
+        StringBuilder fileNameBuilder = new StringBuilder();
+        acceptedContentTypes.forEach(type -> {
+            if (Objects.equals(file.getContentType(), type))
+                fileNameBuilder
+                        .append(Objects.requireNonNull(file
+                                        .getOriginalFilename())
+                                .replace("." + type.replace("image/", ""), "")
+                                .replace("_small", ""));
+        });
+        fileNameBuilder
+                .append("_")
+                .append(Instant.now());
+
         String contentType = Objects.requireNonNull(file.getContentType()).replace("image/", "");
         if (acceptedContentTypes.contains(file.getContentType())) {
             // Upload original file
             try (InputStream inputStream = file.getInputStream()) {
-                keyOriginal = String.format("%s_%s.%s", file.getName(), Instant.now(), contentType);
+                keyOriginal = String.format("%s.%s", fileNameBuilder, contentType);
                 log.info("User {} is trying to upload this file : {}", user, keyOriginal);
 
                 s3Client.putObject(
@@ -84,12 +98,11 @@ public class FileService {
                                 .key(keyOriginal)
                                 .build(),
                         RequestBody.fromInputStream(inputStream, file.getSize()));
-            } catch (IOException e) {
-                throw new RuntimeException("Error uploading file to S3", e);
             }
 
+            // Upload the resized image
             byte[] resizedImage = resizeImageService.resize(file);
-            keyResized = String.format("%s_%s_small.%s", file.getName(), Instant.now(), contentType);
+            keyResized = String.format("%s_small.%s", fileNameBuilder, contentType);
             log.info("User {} is trying to upload this file : {}", user, keyResized);
             s3Client.putObject(
                     PutObjectRequest.builder()
@@ -100,31 +113,30 @@ public class FileService {
 
             Image image = new Image(getFileUrl(keyOriginal));
             image.setResizedImageUrl(getFileUrl(keyResized));
-            return CompletableFuture.completedFuture(imageRepository.save(
-                    image
-            ));
+            return CompletableFuture.completedFuture(imageRepository.save(image));
         }
         else throw new CustomException(CustomError.INVALID_FILE_CONTENT_TYPE);
     }
 
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public List<Image> updateFileDetails(List<FileDetail> fileDetails, Blog blog) {
-        return fileDetails.stream().map(file -> {
-            Optional<Image> optImage = imageRepository.findById(file.id());
-            return optImage.map(image -> {
-                if (image.getBlog() != null) {
-                    log.error("Invalid image found {}", image.getId());
-                    Image invalidImage = new Image(image.getOriginalImageUrl());
-                    invalidImage.setId(image.getId());
-                    invalidImage.setDescription("[ERROR] This image upload request has been declined");
-                    return invalidImage;
-                }
-                image.setBlog(blog);
-                if (!StringUtils.isEmpty(file.description()))
-                    image.setDescription(file.description());
-                return imageRepository.save(image);
-            }).orElseThrow();
-        }).toList();
+        return fileDetails.stream()
+                .map(file -> {
+                Optional<Image> optImage = imageRepository.findById(file.id());
+                return optImage.map(image -> {
+                    if (image.getBlog() != null) {
+                        log.error("Invalid image found {}", image.getId());
+                        Image invalidImage = new Image(image.getOriginalImageUrl());
+                        invalidImage.setId(image.getId());
+                        invalidImage.setDescription("[ERROR] This image upload request has been declined");
+                        return invalidImage;
+                    }
+                    image.setBlog(blog);
+                    if (!StringUtils.isEmpty(file.description()))
+                        image.setDescription(file.description());
+                    return imageRepository.save(image);})
+                        .orElseThrow();})
+                .toList();
     }
 
     private String getFileUrl(String key) {
