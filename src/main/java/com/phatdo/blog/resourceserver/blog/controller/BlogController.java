@@ -13,6 +13,7 @@ import com.phatdo.blog.resourceserver.blog.service.BlogService;
 
 import com.phatdo.blog.resourceserver.image.service.FileService;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import static com.phatdo.blog.resourceserver.utils.commons.path.CommonApi.API_BLOG;
 
+@Slf4j
 @RestController
 @RequestMapping(API_BLOG)
 public class BlogController {
